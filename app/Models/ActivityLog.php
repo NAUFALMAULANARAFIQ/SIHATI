@@ -6,21 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityLog extends Model
 {
-    protected $table = 'activity_logs';
+    public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'action', 'module', 'description',
-        'target_table', 'target_id', 'old_values', 'new_values',
-        'ip_address', 'user_agent',
+        'user_id',
+        'action',
+        'module',
+        'description',
+        'target_table',
+        'target_id',
+        'old_values',
+        'new_values',
+        'ip_address',
+        'user_agent',
+        'created_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'old_values' => 'json',
-            'new_values' => 'json',
-        ];
-    }
+    protected $casts = [
+        'old_values' => 'array',
+        'new_values' => 'array',
+        'created_at' => 'datetime',
+    ];
 
     public function user()
     {

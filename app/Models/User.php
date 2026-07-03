@@ -2,13 +2,30 @@
 
 namespace App\Models;
 
-use Database\Factories\UserFactory;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Hidden(['password', 'remember_token'])]
+#[Fillable([
+    'bidang_id',
+    'name',
+    'username',
+    'email',
+    'password',
+    'no_hp',
+    'role',
+    'is_active',
+])]
+#[Hidden([
+    'password',
+    'remember_token',
+])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -28,43 +45,38 @@ class User extends Authenticatable
         ];
     }
 
-    public function bidang()
+    public function bidang(): BelongsTo
     {
         return $this->belongsTo(Bidang::class);
     }
 
-    public function aduansSebagaiPelapor()
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function aduansAsPelapor(): HasMany
     {
         return $this->hasMany(Aduan::class, 'pelapor_id');
     }
 
-    public function aduansSebagaiPetugas()
+    public function aduansAsPetugas(): HasMany
     {
         return $this->hasMany(Aduan::class, 'petugas_id');
     }
 
-    public function attachments()
-    {
-        return $this->hasMany(AduanAttachment::class, 'uploaded_by');
-    }
-
-    public function notes()
-    {
-        return $this->hasMany(AduanNote::class, 'petugas_id');
-    }
-
-    public function comments()
+    public function aduanComments(): HasMany
     {
         return $this->hasMany(AduanComment::class);
     }
 
-    public function ratings()
+    public function aduanNotes(): HasMany
     {
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(AduanNote::class, 'petugas_id');
     }
 
-    public function activityLogs()
+    public function ratings(): HasMany
     {
-        return $this->hasMany(ActivityLog::class);
+        return $this->hasMany(Rating::class);
     }
 }

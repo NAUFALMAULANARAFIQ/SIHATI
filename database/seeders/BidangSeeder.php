@@ -9,10 +9,19 @@ class BidangSeeder extends Seeder
 {
     public function run(): void
     {
-        Bidang::insert([
-            ['nama_bidang' => 'Bidang Anggaran',        'keterangan' => 'Mengelola anggaran daerah'],
-            ['nama_bidang' => 'Bidang Perbendaharaan',  'keterangan' => 'Mengelola perbendaharaan daerah'],
-            ['nama_bidang' => 'Sekretariat',            'keterangan' => 'Bagian tata usaha dan umum'],
-        ]);
+        $bidangs = [
+            'Sekretariat',
+            'Bidang Anggaran',
+            'Bidang Perbendaharaan',
+            'Bidang Akuntansi',
+            'Bidang Aset',
+            'Bidang Pajak/Retribusi',
+        ];
+
+        foreach ($bidangs as $nama) {
+            Bidang::firstOrCreate([
+                'nama_bidang' => $nama,
+            ]);
+        }
     }
 }

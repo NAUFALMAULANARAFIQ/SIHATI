@@ -3,19 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AduanNote extends Model
 {
-    protected $table = 'aduan_notes';
+    use HasFactory;
 
-    protected $fillable = ['aduan_id', 'petugas_id', 'catatan'];
+    protected $fillable = [
+        'aduan_id',
+        'petugas_id',
+        'catatan',
+    ];
 
-    public function aduan()
+    public function aduan(): BelongsTo
     {
         return $this->belongsTo(Aduan::class);
     }
 
-    public function petugas()
+    public function petugas(): BelongsTo
     {
         return $this->belongsTo(User::class, 'petugas_id');
     }

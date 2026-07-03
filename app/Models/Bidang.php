@@ -3,10 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Bidang extends Model
 {
-    protected $fillable = ['nama_bidang', 'keterangan'];
+    use HasFactory;
+
+    protected $fillable = [
+        'nama_bidang',
+        'keterangan',
+    ];
 
     public function users()
     {

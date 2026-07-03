@@ -1,13 +1,24 @@
 <?php
 
-use App\Models\Aduan;
-use App\Models\ActivityLog;
-use App\Models\Bidang;
-use App\Models\Category;
-use App\Models\Priority;
-use App\Models\Status;
-use App\Models\User;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BidangController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\PriorityController;
+use App\Http\Controllers\Admin\StatusController;
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\AduanController as AdminAduanController;
+use App\Http\Controllers\Admin\AduanStatusController;
+use App\Http\Controllers\Admin\AduanNoteController;
+use App\Http\Controllers\Admin\AduanAttachmentController;
+use App\Http\Controllers\Admin\AduanCommentController;
+use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboardController;
+use App\Http\Controllers\Pegawai\AduanController as PegawaiAduanController;
+use App\Http\Controllers\Pegawai\CommentController as PegawaiCommentController;
+use App\Http\Controllers\Pegawai\RatingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,120 +28,46 @@ use Illuminate\Support\Facades\Route;
 
 // Daftar Aduan
 Route::get('/', function () {
-    $aduans = Aduan::with(['pelapor', 'bidang', 'category', 'priority', 'status'])->get();
-    $categories = Category::all();
-    $statuses = Status::all();
-    $priorities = Priority::all();
-    $bidangs = Bidang::all();
-
-    return view('aduan.index', compact('aduans', 'categories', 'statuses', 'priorities', 'bidangs'));
-})->name('pegawai.aduan.index');
-
-// Buat Aduan
-Route::get('/aduan/buat', function () {
-    $categories = Category::all();
-    $priorities = Priority::all();
-    return view('aduan.create', compact('categories', 'priorities'));
-})->name('pegawai.aduan.create');
-
-// Detail Aduan
-Route::get('/aduan/{id}', function ($id) {
-    $aduan = Aduan::with([
-        'pelapor', 'petugas', 'bidang', 'category', 'priority', 'status',
-        'attachments', 'notes.petugas', 'comments.user',
-        'statusHistories.statusSebelumnya', 'statusHistories.statusBaru', 'statusHistories.changedBy',
-    ])->findOrFail($id);
-
-    $availableStatuses = Status::all();
-    $categories = Category::all();
-    $statuses = Status::all();
-    $priorities = Priority::all();
-
-    return view('aduan.show', compact('aduan', 'availableStatuses', 'categories', 'statuses', 'priorities'));
-})->name('pegawai.aduan.show');
-
-/*
-|--------------------------------------------------------------------------
-| ALIAS ROUTE — untuk testing view, hapus setelah backend jadi
-|--------------------------------------------------------------------------
-*/
-Route::name('admin.')->prefix('admin')->group(function () {
-    Route::get('/aduan', fn() => redirect()->route('pegawai.aduan.index'))->name('aduan.index');
-    Route::get('/aduan/{id}', fn($id) => redirect()->route('pegawai.aduan.show', $id))->name('aduan.show');
-    Route::match(['get', 'post'], '/aduan/{id}/status', fn() => back())->name('aduan.status.update');
-    Route::match(['get', 'post'], '/aduan/{id}/notes', fn() => back())->name('aduan.notes.store');
-    Route::match(['get', 'post'], '/aduan/{id}/comments', fn() => back())->name('aduan.comments.store');
-    Route::match(['get', 'post'], '/aduan/{id}/attachments', fn() => back())->name('aduan.attachments.store');
-});
-Route::name('pegawai.')->prefix('pegawai')->group(function () {
-    Route::match(['get', 'post'], '/aduan/{id}/ratings', fn() => back())->name('aduan.ratings.store');
-    Route::match(['get', 'post'], '/aduan/{id}/comments', fn() => back())->name('aduan.comments.store');
+    return redirect()->route('login');
 });
 
-/*
-|--------------------------------------------------------------------------
-| TEMPORARY ROUTES — Laporan, Log Aktivitas, Master Data, Profile
-|--------------------------------------------------------------------------
-*/
+Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
+    Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('aduan', PegawaiAduanController::class)->only(['index', 'create', 'store', 'show']);
+    Route::post('/aduan/{aduan}/comments', [PegawaiCommentController::class, 'store'])->name('aduan.comments.store');
+    Route::post('/aduan/{aduan}/ratings', [RatingController::class, 'store'])->name('aduan.ratings.store');
+});
 
-// Laporan
-Route::get('/laporan', function () {
-    $categories = Category::all();
-    $statuses = Status::all();
-    $bidangs = Bidang::all();
-    $petugasList = User::where('role', 'admin')->get(['id', 'name']);
-    $aduans = Aduan::with(['pelapor', 'bidang', 'category', 'priority', 'status', 'petugas'])->get();
-    $totalAduan = $aduans->count();
-    $aduanSelesai = $aduans->where('status.kode_status', 'selesai')->count();
-    $aduanDiproses = $aduans->where('status.kode_status', 'diproses')->count();
-    $aduanDiterima = $aduans->where('status.kode_status', 'diterima')->count();
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    return view('laporan.index', compact('categories', 'statuses', 'bidangs', 'petugasList', 'aduans', 'totalAduan', 'aduanSelesai', 'aduanDiproses', 'aduanDiterima'));
-})->name('admin.laporan.index');
+    Route::resource('aduan', AdminAduanController::class)->only(['index', 'show']);
+    Route::patch('/aduan/{aduan}/status', [AduanStatusController::class, 'update'])->name('aduan.status.update');
+    Route::post('/aduan/{aduan}/notes', [AduanNoteController::class, 'store'])->name('aduan.notes.store');
+    Route::post('/aduan/{aduan}/comments', [AduanCommentController::class, 'store'])->name('aduan.comments.store');
+    Route::post('/aduan/{aduan}/attachments', [AduanAttachmentController::class, 'store'])->name('aduan.attachments.store');
+    Route::delete('/aduan/{aduan}/attachments/{attachment}', [AduanAttachmentController::class, 'destroy'])->name('aduan.attachments.destroy');
 
-Route::get('/laporan/print', function () {
-    $aduans = Aduan::with(['pelapor', 'bidang', 'category', 'priority', 'status', 'petugas'])->get();
-    $totalAduan = $aduans->count();
-    $aduanSelesai = $aduans->where('status.kode_status', 'selesai')->count();
-    $aduanDiproses = $aduans->where('status.kode_status', 'diproses')->count();
-    $aduanDiterima = $aduans->where('status.kode_status', 'diterima')->count();
-    $tglAwal = request('tgl_awal', '-');
-    $tglAkhir = request('tgl_akhir', '-');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
+    Route::get('/laporan/export', [LaporanController::class, 'export'])->name('laporan.export');
+});
 
-    return view('laporan.print', compact('aduans', 'totalAduan', 'aduanSelesai', 'aduanDiproses', 'aduanDiterima', 'tglAwal', 'tglAkhir'));
-})->name('admin.laporan.print');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-// Activity Logs
-Route::get('/log-aktivitas', function () {
-    $logs = ActivityLog::with('user')->latest()->get();
-    return view('activity-logs.index', compact('logs'));
-})->name('admin.activity-logs.index');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('users', UserController::class);
+    Route::resource('bidangs', BidangController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('priorities', PriorityController::class);
+    Route::resource('statuses', StatusController::class);
 
-Route::get('/log-aktivitas/{id}', function ($id) {
-    $log = ActivityLog::with('user')->findOrFail($id);
-    return view('activity-logs.show', compact('log'));
-})->name('admin.activity-logs.show');
+    Route::get('activity-logs', [ActivityLogController::class, 'index'])
+        ->name('activity-logs.index');
+});
 
-// Data Master — Pengguna
-Route::get('/master/pengguna', function () {
-    $bidangs = Bidang::all();
-    $users = User::with('bidang')->get();
-    return view('master.pengguna.index', compact('users', 'bidangs'));
-})->name('admin.master.pengguna.index');
-
-// Data Master — Bidang
-Route::get('/master/bidang', function () {
-    $bidangs = Bidang::withCount('users')->get();
-    return view('master.bidang.index', compact('bidangs'));
-})->name('admin.master.bidang.index');
-
-// Data Master — Kategori
-Route::get('/master/kategori', function () {
-    $categories = Category::withCount('aduans')->get();
-    return view('master.kategori.index', compact('categories'));
-})->name('admin.master.kategori.index');
-
-// Profile
-Route::get('/profile', function () {
-    return view('profile.index');
-})->name('profile.index');
+require __DIR__.'/auth.php';

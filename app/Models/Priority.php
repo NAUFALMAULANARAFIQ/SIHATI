@@ -3,12 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Priority extends Model
 {
-    protected $fillable = ['nama_prioritas', 'keterangan', 'level'];
+    use HasFactory;
 
-    public function aduans()
+    protected $fillable = [
+        'nama_prioritas',
+        'keterangan',
+        'level',
+    ];
+
+    public function aduans(): HasMany
     {
         return $this->hasMany(Aduan::class);
     }
