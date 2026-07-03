@@ -54,4 +54,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(ActivityLog::class);
     }
+
+    public function aduansAsPelapor(): HasMany
+    {
+        return $this->hasMany(Aduan::class, 'pelapor_id');
+    }
+
+    public function aduansAsPetugas(): HasMany
+    {
+        return $this->hasMany(Aduan::class, 'petugas_id');
+    }
+
+    public function aduanComments(): HasMany
+    {
+        return $this->hasMany(AduanComment::class);
+    }
+
+    public function aduanNotes(): HasMany
+    {
+        return $this->hasMany(AduanNote::class, 'petugas_id');
+    }
+
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
 }
