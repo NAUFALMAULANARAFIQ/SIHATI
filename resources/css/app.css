@@ -4,6 +4,59 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-notion: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --color-sihati-primary: #5645D4;
+    --color-sihati-primary-pressed: #4534B3;
+    --color-sihati-primary-deep: #3A2A99;
+    --color-sihati-on-primary: #FFFFFF;
+
+    --color-sihati-navy: #0A1530;
+    --color-sihati-navy-deep: #070F24;
+    --color-sihati-navy-mid: #1A2A52;
+
+    --color-sihati-link: #0075DE;
+    --color-sihati-link-pressed: #005BAB;
+
+    --color-sihati-canvas: #FFFFFF;
+    --color-sihati-surface: #F6F5F4;
+    --color-sihati-surface-soft: #FAFAF9;
+
+    --color-sihati-hairline: #E5E3DF;
+    --color-sihati-hairline-soft: #EDE9E4;
+    --color-sihati-hairline-strong: #C8C4BE;
+
+    --color-sihati-ink: #1A1A1A;
+    --color-sihati-ink-deep: #000000;
+    --color-sihati-charcoal: #37352F;
+    --color-sihati-slate: #5D5B54;
+    --color-sihati-steel: #787671;
+    --color-sihati-stone: #A4A097;
+    --color-sihati-muted: #BBB8B1;
+    --color-sihati-on-dark: #FFFFFF;
+    --color-sihati-on-dark-muted: #A4A097;
+
+    --color-sihati-peach: #FFE8D4;
+    --color-sihati-rose: #FDE0EC;
+    --color-sihati-mint: #D9F3E1;
+    --color-sihati-lavender: #E6E0F5;
+    --color-sihati-sky: #DCECFA;
+    --color-sihati-yellow: #FEF7D6;
+    --color-sihati-yellow-bold: #F9E79F;
+    --color-sihati-cream: #F8F5E8;
+    --color-sihati-gray: #F0EEEC;
+
+    --color-sihati-success: #1AAE39;
+    --color-sihati-warning: #DD5B00;
+    --color-sihati-error: #E03131;
+    --color-sihati-teal: #2A9D99;
+    --color-sihati-orange: #DD5B00;
+    --color-sihati-pink: #FF64C8;
+
+    --shadow-subtle: rgba(15, 15, 15, 0.04) 0px 1px 2px 0px;
+    --shadow-card: rgba(15, 15, 15, 0.08) 0px 4px 12px 0px;
+    --shadow-mockup: rgba(15, 15, 15, 0.20) 0px 24px 48px -8px;
+    --shadow-modal: rgba(15, 15, 15, 0.16) 0px 16px 48px -8px;
 }
