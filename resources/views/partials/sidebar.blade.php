@@ -86,7 +86,7 @@
                 </a>
             @else
                 <a href="{{ route('pegawai.aduan.index') }}"
-                    class="flex items-center justify-center gap-3 rounded-md px-2 py-2.5 text-sm font-medium transition lg:justify-start lg:px-3 {{ isActive(['pegawai.aduan']) ? 'bg-sihati-primary text-white' : 'text-sihati-on-dark/80 hover:bg-white/10 hover:text-sihati-on-dark' }}">
+                    class="flex items-center justify-center gap-3 rounded-md px-2 py-2.5 text-sm font-medium transition lg:justify-start lg:px-3 {{ isActive(['pegawai.aduan.index']) ? 'bg-sihati-primary text-white' : 'text-sihati-on-dark/80 hover:bg-white/10 hover:text-sihati-on-dark' }}">
                     <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                         <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
                         <polyline points="14 2 14 8 20 8"/>
@@ -94,13 +94,7 @@
                     <span class="sidebar-label">Aduan Saya</span>
                 </a>
 
-                <a href="{{ route('pegawai.aduan.create') }}"
-                    class="flex items-center justify-center gap-3 rounded-md px-2 py-2.5 text-sm font-medium transition lg:justify-start lg:px-3 {{ isActive(['pegawai.aduan.create']) ? 'bg-sihati-primary text-white' : 'text-sihati-on-dark/80 hover:bg-white/10 hover:text-sihati-on-dark' }}">
-                    <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path d="M12 4v16m8-8H4"/>
-                    </svg>
-                    <span class="sidebar-label">Buat Aduan</span>
-                </a>
+
             @endif
         </nav>
     </div>

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Aduan\StoreAduanRequest;
 use App\Models\Aduan;
+use App\Models\Bidang;
+use App\Models\Category;
+use App\Models\Priority;
 use App\Services\AduanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +54,31 @@ class AduanController extends Controller
 
         $aduans = $query->latest('tanggal_aduan')->paginate(20)->withQueryString();
 
-        return view('admin.aduan.index', compact('aduans'));
+        $categories = Category::where('is_active', true)->get();
+        $priorities = Priority::all();
+        $bidangs = Bidang::all();
+
+        return view('admin.aduan.index', compact('aduans', 'categories', 'priorities', 'bidangs'));
+    }
+
+    public function create()
+    {
+        return redirect()->route('admin.aduan.index');
+    }
+
+    public function store(StoreAduanRequest $request)
+    {
+        $user = Auth::user();
+
+        $data = $request->validated();
+
+        $attachments = $request->hasFile('attachments') ? $request->file('attachments') : null;
+
+        $aduan = AduanService::create($data, $user->id, $attachments);
+
+        return redirect()
+            ->route('admin.aduan.index')
+            ->with('success', "Aduan berhasil dibuat dengan nomor tiket {$aduan->nomor_tiket}.");
     }
 
     public function show(Aduan $aduan)

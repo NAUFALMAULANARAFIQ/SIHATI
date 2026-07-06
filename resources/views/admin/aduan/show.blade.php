@@ -38,9 +38,19 @@
             <div class="mt-3 text-sm leading-6 text-sihati-slate whitespace-pre-line">{{ $aduan->deskripsi ?? 'Tidak ada deskripsi.' }}</div>
         </div>
 
-        @if($aduan->attachments && $aduan->attachments->isNotEmpty())
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
-            <h3 class="text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Lampiran</h3>
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Lampiran</h3>
+                <label for="uploadAttachment" class="inline-flex cursor-pointer items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium text-sihati-primary hover:bg-sihati-surface">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Upload
+                </label>
+            </div>
+            <form method="POST" action="{{ route('admin.aduan.attachments.store', $aduan) }}" enctype="multipart/form-data" class="mt-3">
+                @csrf
+                <input type="file" id="uploadAttachment" name="file" accept=".jpg,.jpeg,.png,.pdf" class="hidden" onchange="this.form.submit()">
+            </form>
+            @if($aduan->attachments && $aduan->attachments->isNotEmpty())
             <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 @foreach ($aduan->attachments as $att)
                 <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank" class="flex items-center gap-2 rounded-md border border-sihati-hairline-soft p-3 text-sm transition hover:bg-sihati-surface-soft">
@@ -49,8 +59,10 @@
                 </a>
                 @endforeach
             </div>
+            @else
+            <p class="mt-3 text-sm text-sihati-slate">Belum ada lampiran.</p>
+            @endif
         </div>
-        @endif
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <div class="mb-4 flex items-center justify-between">
@@ -69,7 +81,7 @@
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Komentar &amp; Diskusi</h3>
-            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan), 'showAttachment' => true])
+            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan)])
         </div>
     </div>
 
@@ -111,7 +123,7 @@
             @csrf @method('PATCH')
             <div>
                 <label for="status" class="block text-sm font-medium text-sihati-charcoal">Status Baru <span class="text-sihati-error">*</span></label>
-                <select id="status" name="status" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
+                <select id="status_kode" name="status_kode" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                     <option value="">Pilih status</option>
                     @foreach (\App\Models\Status::all() as $st)<option value="{{ $st->kode_status }}" {{ $st->kode_status === $statusKey ? 'disabled' : '' }}>{{ $st->nama_status }} {{ $st->kode_status === $statusKey ? '(saat ini)' : '' }}</option>@endforeach
                 </select>
