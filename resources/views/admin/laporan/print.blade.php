@@ -31,17 +31,37 @@
     </div>
 
     <div class="summary">
-        <div class="summary-item"><p>Total Aduan</p><strong>{{ $aduans->count() }}</strong></div>
-        <div class="summary-item"><p>Selesai</p><strong>{{ $aduans->where('status.kode_status', 'selesai')->count() }}</strong></div>
-        <div class="summary-item"><p>Diproses</p><strong>{{ $aduans->where('status.kode_status', 'diproses')->count() }}</strong></div>
-        <div class="summary-item"><p>Diterima</p><strong>{{ $aduans->where('status.kode_status', 'diterima')->count() }}</strong></div>
+        <div class="summary-item">
+            <p>Total Aduan</p>
+            <strong>{{ $aduans->count() }}</strong>
+        </div>
+        <div class="summary-item">
+            <p>Selesai</p>
+            <strong>{{ $aduans->where('status.kode_status', 'selesai')->count() }}</strong>
+        </div>
+        <div class="summary-item">
+            <p>Diproses</p>
+            <strong>{{ $aduans->where('status.kode_status', 'diproses')->count() }}</strong>
+        </div>
+        <div class="summary-item">
+            <p>Diterima</p>
+            <strong>{{ $aduans->where('status.kode_status', 'diterima')->count() }}</strong>
+        </div>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>No</th><th>No. Tiket</th><th>Tgl. Aduan</th><th>Pelapor</th><th>Bidang</th>
-                <th>Kategori</th><th>Prioritas</th><th>Status</th><th>Petugas</th><th>Tgl. Selesai</th>
+                <th>No</th>
+                <th>No. Tiket</th>
+                <th>Tgl. Aduan</th>
+                <th>Pelapor</th>
+                <th>Bidang</th>
+                <th>Kategori</th>
+                <th>Prioritas</th>
+                <th>Status</th>
+                <th>Petugas</th>
+                <th>Tgl. Selesai</th>
             </tr>
         </thead>
         <tbody>
@@ -59,12 +79,16 @@
                 <td>{{ $aduan->tanggal_selesai ? \Carbon\Carbon::parse($aduan->tanggal_selesai)->isoFormat('DD-MM-Y') : '-' }}</td>
             </tr>
             @empty
-            <tr><td colspan="10" style="text-align:center;color:#787671;">Tidak ada data.</td></tr>
+            <tr>
+                <td colspan="10" style="text-align:center;color:#787671;">Tidak ada data.</td>
+            </tr>
             @endforelse
         </tbody>
     </table>
 
-    <div class="footer"><p>Dicetak pada: {{ now()->isoFormat('DD MMMM YYYY HH:mm') }}</p></div>
+    <div class="footer">
+        <p>Dicetak pada: {{ now()->isoFormat('DD MMMM YYYY HH:mm') }}</p>
+    </div>
 
     <div class="no-print" style="margin-top:24px;text-align:center;">
         <button onclick="window.print()" style="padding:8px 24px;background:#5645D4;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;">Cetak / Simpan PDF</button>

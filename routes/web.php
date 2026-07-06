@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BidangController;
@@ -30,6 +31,14 @@ use App\Http\Controllers\Pegawai\RatingController;
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+Route::middleware('auth')->get('/dashboard', function () {
+    $role = Auth::user()->role;
+    if ($role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('pegawai.dashboard');
+})->name('dashboard');
 
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
     Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');

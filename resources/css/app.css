@@ -1,62 +1,689 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-notion: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-sans:
+        ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --font-notion:
+        ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
 
-    --color-sihati-primary: #5645D4;
-    --color-sihati-primary-pressed: #4534B3;
-    --color-sihati-primary-deep: #3A2A99;
-    --color-sihati-on-primary: #FFFFFF;
+    --color-sihati-primary: #5645d4;
+    --color-sihati-primary-pressed: #4534b3;
+    --color-sihati-primary-deep: #3a2a99;
+    --color-sihati-on-primary: #ffffff;
 
-    --color-sihati-navy: #0A1530;
-    --color-sihati-navy-deep: #070F24;
-    --color-sihati-navy-mid: #1A2A52;
+    --color-sihati-navy: #0a1530;
+    --color-sihati-navy-deep: #070f24;
+    --color-sihati-navy-mid: #1a2a52;
 
-    --color-sihati-link: #0075DE;
-    --color-sihati-link-pressed: #005BAB;
+    --color-sihati-link: #0075de;
+    --color-sihati-link-pressed: #005bab;
 
-    --color-sihati-canvas: #FFFFFF;
-    --color-sihati-surface: #F6F5F4;
-    --color-sihati-surface-soft: #FAFAF9;
+    --color-sihati-canvas: #ffffff;
+    --color-sihati-surface: #f6f5f4;
+    --color-sihati-surface-soft: #fafaf9;
 
-    --color-sihati-hairline: #E5E3DF;
-    --color-sihati-hairline-soft: #EDE9E4;
-    --color-sihati-hairline-strong: #C8C4BE;
+    --color-sihati-hairline: #e5e3df;
+    --color-sihati-hairline-soft: #ede9e4;
+    --color-sihati-hairline-strong: #c8c4be;
 
-    --color-sihati-ink: #1A1A1A;
+    --color-sihati-ink: #1a1a1a;
     --color-sihati-ink-deep: #000000;
-    --color-sihati-charcoal: #37352F;
-    --color-sihati-slate: #5D5B54;
+    --color-sihati-charcoal: #37352f;
+    --color-sihati-slate: #5d5b54;
     --color-sihati-steel: #787671;
-    --color-sihati-stone: #A4A097;
-    --color-sihati-muted: #BBB8B1;
-    --color-sihati-on-dark: #FFFFFF;
-    --color-sihati-on-dark-muted: #A4A097;
+    --color-sihati-stone: #a4a097;
+    --color-sihati-muted: #bbb8b1;
+    --color-sihati-on-dark: #ffffff;
+    --color-sihati-on-dark-muted: #a4a097;
 
-    --color-sihati-peach: #FFE8D4;
-    --color-sihati-rose: #FDE0EC;
-    --color-sihati-mint: #D9F3E1;
-    --color-sihati-lavender: #E6E0F5;
-    --color-sihati-sky: #DCECFA;
-    --color-sihati-yellow: #FEF7D6;
-    --color-sihati-yellow-bold: #F9E79F;
-    --color-sihati-cream: #F8F5E8;
-    --color-sihati-gray: #F0EEEC;
+    --color-sihati-peach: #ffe8d4;
+    --color-sihati-rose: #fde0ec;
+    --color-sihati-mint: #d9f3e1;
+    --color-sihati-lavender: #e6e0f5;
+    --color-sihati-sky: #dcecfa;
+    --color-sihati-yellow: #fef7d6;
+    --color-sihati-yellow-bold: #f9e79f;
+    --color-sihati-cream: #f8f5e8;
+    --color-sihati-gray: #f0eeec;
 
-    --color-sihati-success: #1AAE39;
-    --color-sihati-warning: #DD5B00;
-    --color-sihati-error: #E03131;
-    --color-sihati-teal: #2A9D99;
-    --color-sihati-orange: #DD5B00;
-    --color-sihati-pink: #FF64C8;
+    --color-sihati-success: #1aae39;
+    --color-sihati-warning: #dd5b00;
+    --color-sihati-error: #e03131;
+    --color-sihati-teal: #2a9d99;
+    --color-sihati-orange: #dd5b00;
+    --color-sihati-pink: #ff64c8;
+
+    --color-primary: #5645d4;
+    --color-primary-dark: #4534b3;
+    --color-primary-soft: #e6e0f5;
+    --color-primary-100: #ede9fe;
+    --color-blue: #147bd1;
+    --color-success: #1aae39;
+    --color-success-soft: #dcfce7;
+    --color-warning: #dd5b00;
+    --color-warning-soft: #fef3c7;
+    --color-error: #e03131;
+    --color-error-soft: #fee2e2;
+    --color-orange: #dd5b00;
+    --color-navy: #0a1530;
+    --color-surface: #f6f5f4;
+    --color-surface-soft: #fafaf9;
+    --color-canvas: #ffffff;
+    --color-hairline: #e5e3df;
+    --color-text-ink: #1a1a1a;
+    --color-text-muted: #787671;
+    --color-text-sidebar: #5d6472;
+    --color-hover-bg: #f1f5fb;
+    --color-pastel-purple: #e6e0f5;
+    --color-pastel-blue: #dbeafe;
+    --color-pastel-green: #dcfce7;
+    --color-pastel-yellow: #fef3c7;
+    --color-pastel-red: #fee2e2;
+    --color-pastel-orange: #ffedd5;
+    --color-pastel-cyan: #cffafe;
+    --color-pastel-indigo: #e0e7ff;
 
     --shadow-subtle: rgba(15, 15, 15, 0.04) 0px 1px 2px 0px;
     --shadow-card: rgba(15, 15, 15, 0.08) 0px 4px 12px 0px;
-    --shadow-mockup: rgba(15, 15, 15, 0.20) 0px 24px 48px -8px;
+    --shadow-mockup: rgba(15, 15, 15, 0.2) 0px 24px 48px -8px;
     --shadow-modal: rgba(15, 15, 15, 0.16) 0px 16px 48px -8px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.transition-smooth {
+    transition-property:
+        background-color, border-color, color, fill, stroke, opacity,
+        box-shadow, transform;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    --tw-ring-color: var(--color-primary);
+}
+
+/* ============================================
+   SIDEBAR - LIGHT THEME
+   ============================================ */
+
+/* Sidebar background - light, warm off-white */
+.sidebar-gradient {
+    background: linear-gradient(180deg, #fbfaf8 0%, #f7f6f3 48%, #eef6ff 100%);
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid #e6e1da;
+}
+
+/* Sidebar inner content wrapper */
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Logo area - no plate, direct placement */
+.sidebar-logo-area {
+    padding: 20px 20px 16px 20px;
+    flex-shrink: 0;
+}
+
+/* Sidebar nav link base - light theme */
+.sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2.5 mx-2 rounded-lg text-sm font-medium;
+    color: var(--color-text-sidebar);
+    transition: all 0.2s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.sidebar-link:hover {
+    background: var(--color-hover-bg);
+    color: var(--color-text-ink);
+}
+
+.sidebar-link .sidebar-link-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-link:hover .sidebar-link-icon {
+    color: var(--color-primary);
+}
+
+/* Active state - primary purple accent with left border */
+.sidebar-link-active {
+    background: var(--color-primary-soft);
+    color: var(--color-text-ink);
+    font-weight: 600;
+}
+
+.sidebar-link-active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 22px;
+    background: var(--color-primary);
+    border-radius: 0 4px 4px 0;
+}
+
+.sidebar-link-active .sidebar-link-icon {
+    color: var(--color-primary);
+}
+
+/* Section labels */
+.sidebar-section {
+    padding-top: 16px;
+    padding-bottom: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.sidebar-section-title {
+    @apply text-xs font-semibold tracking-wider;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Sidebar bottom section */
+.sidebar-bottom {
+    border-top: 1px solid var(--color-hairline);
+    padding: 8px 0;
+    margin-top: auto;
+}
+
+/* Logout link */
+.sidebar-link-logout {
+    @apply flex items-center gap-3 px-3 py-2.5 mx-2 rounded-lg text-sm font-medium;
+    color: var(--color-text-sidebar);
+    transition: all 0.2s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.sidebar-link-logout:hover {
+    background: #fdecec;
+    color: var(--color-error);
+}
+
+.sidebar-link-logout .sidebar-link-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.sidebar-link-logout:hover .sidebar-link-icon {
+    color: var(--color-error);
+}
+
+/* Settings link */
+.sidebar-link-settings {
+    @apply flex items-center gap-3 px-3 py-2.5 mx-2 rounded-lg text-sm font-medium;
+    color: var(--color-text-sidebar);
+    transition: all 0.2s ease;
+    position: relative;
+    text-decoration: none;
+}
+
+.sidebar-link-settings:hover {
+    background: var(--color-hover-bg);
+    color: var(--color-text-ink);
+}
+
+.sidebar-link-settings .sidebar-link-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.sidebar-link-settings:hover .sidebar-link-icon {
+    color: var(--color-primary);
+}
+
+/* ============================================
+   HERO PATTERN (Login page)
+   ============================================ */
+.hero-pattern {
+    position: relative;
+}
+
+.hero-pattern::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(
+            circle at 15% 85%,
+            rgba(91, 69, 217, 0.1) 0%,
+            transparent 50%
+        ),
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(20, 123, 209, 0.08) 0%,
+            transparent 50%
+        );
+    pointer-events: none;
+}
+
+/* Subtle grid pattern for hero */
+.hero-grid {
+    background-image:
+        linear-gradient(rgba(8, 31, 61, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(8, 31, 61, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Hero brand text - dark text on light background */
+.hero-brand-sihati {
+    color: var(--color-text-ink);
+}
+
+.hero-brand-bppkad {
+    color: var(--color-primary);
+}
+
+.hero-tagline {
+    color: var(--color-text-sidebar);
+}
+
+.hero-description {
+    color: var(--color-text-muted);
+}
+
+/* ============================================
+   CARD STYLES
+   ============================================ */
+.card-shadow {
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.04),
+        0 1px 2px -1px rgba(0, 0, 0, 0.04);
+}
+
+.card-hover {
+    transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06),
+        0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+}
+
+/* Stat card variants */
+.stat-card {
+    @apply bg-white rounded-xl border border-hairline p-4 md:p-5;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-radius: 12px 12px 0 0;
+}
+
+.stat-card:hover {
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.07),
+        0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    transform: translateY(-3px);
+}
+
+.stat-card:hover::after {
+    opacity: 1;
+}
+
+.stat-card-icon {
+    @apply w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-card-icon {
+    transform: scale(1.08);
+}
+
+/* Pastel background variants for stat cards */
+.stat-purple {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-purple) 0%,
+        white 100%
+    );
+    border-color: #ddd6fe;
+}
+.stat-purple::after {
+    background: var(--color-primary);
+}
+.stat-blue {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-blue) 0%,
+        white 100%
+    );
+    border-color: #bfdbfe;
+}
+.stat-blue::after {
+    background: var(--color-blue);
+}
+.stat-green {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-green) 0%,
+        white 100%
+    );
+    border-color: #bbf7d0;
+}
+.stat-green::after {
+    background: var(--color-success);
+}
+.stat-yellow {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-yellow) 0%,
+        white 100%
+    );
+    border-color: #fde68a;
+}
+.stat-yellow::after {
+    background: var(--color-warning);
+}
+.stat-red {
+    background: linear-gradient(135deg, var(--color-pastel-red) 0%, white 100%);
+    border-color: #fecaca;
+}
+.stat-red::after {
+    background: var(--color-error);
+}
+.stat-orange {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-orange) 0%,
+        white 100%
+    );
+    border-color: #fed7aa;
+}
+.stat-orange::after {
+    background: var(--color-orange);
+}
+.stat-cyan {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-cyan) 0%,
+        white 100%
+    );
+    border-color: #a5f3fc;
+}
+.stat-cyan::after {
+    background: #06b6d4;
+}
+.stat-indigo {
+    background: linear-gradient(
+        135deg,
+        var(--color-pastel-indigo) 0%,
+        white 100%
+    );
+    border-color: #c7d2fe;
+}
+.stat-indigo::after {
+    background: #6366f1;
+}
+
+/* Pastel icon background colors */
+.icon-bg-purple {
+    background: var(--color-pastel-purple);
+}
+.icon-bg-blue {
+    background: var(--color-pastel-blue);
+}
+.icon-bg-green {
+    background: var(--color-pastel-green);
+}
+.icon-bg-yellow {
+    background: var(--color-pastel-yellow);
+}
+.icon-bg-red {
+    background: var(--color-pastel-red);
+}
+.icon-bg-orange {
+    background: var(--color-pastel-orange);
+}
+.icon-bg-cyan {
+    background: var(--color-pastel-cyan);
+}
+.icon-bg-indigo {
+    background: var(--color-pastel-indigo);
+}
+
+/* ============================================
+   TABLE STYLES
+   ============================================ */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-row-hover {
+    transition: background-color 0.15s ease;
+}
+
+.table-row-hover:hover {
+    background-color: var(--color-surface);
+}
+
+/* ============================================
+   STATUS BADGE COLORS
+   ============================================ */
+.badge-baru {
+    background: var(--color-pastel-blue);
+    color: #1e40af;
+}
+.badge-diterima {
+    background: var(--color-pastel-cyan);
+    color: #0e7490;
+}
+.badge-diproses {
+    background: var(--color-pastel-yellow);
+    color: #92400e;
+}
+.badge-menunggu {
+    background: var(--color-pastel-indigo);
+    color: #4338ca;
+}
+.badge-selesai {
+    background: var(--color-pastel-green);
+    color: #166534;
+}
+.badge-ditolak {
+    background: var(--color-pastel-red);
+    color: #991b1b;
+}
+.badge-dibatalkan {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* Priority badge colors */
+.badge-rendah {
+    background: var(--color-pastel-green);
+    color: #166534;
+}
+.badge-sedang {
+    background: var(--color-pastel-yellow);
+    color: #92400e;
+}
+.badge-tinggi {
+    background: var(--color-pastel-orange);
+    color: #9a3412;
+}
+.badge-mendesak {
+    background: var(--color-pastel-red);
+    color: #991b1b;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes slideIn {
+    from {
+        transform: translateY(-8px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes slideUp {
+    from {
+        transform: translateY(16px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+@keyframes pulseSoft {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+@keyframes slideInRight {
+    from {
+        transform: translateX(16px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+.animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+}
+.animate-slide-in-left {
+    animation: slideInLeft 0.3s ease-out;
+}
+.animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+}
+.animate-scale-in {
+    animation: scaleIn 0.2s ease-out;
+}
+
+/* Staggered animation delays */
+.delay-100 {
+    animation-delay: 0.1s;
+}
+.delay-200 {
+    animation-delay: 0.2s;
+}
+.delay-300 {
+    animation-delay: 0.3s;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+.modal-backdrop {
+    background-color: rgba(6, 19, 41, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+/* ============================================
+   BUTTON BASE
+   ============================================ */
+.btn {
+    @apply inline-flex items-center justify-center font-medium rounded-lg gap-2 transition-all duration-200;
+}
+
+/* ============================================
+   SHADOW VARIANTS
+   ============================================ */
+.shadow-soft {
+    box-shadow:
+        0 1px 3px 0 rgba(0, 0, 0, 0.05),
+        0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   PRINT
+   ============================================ */
+@media print {
+    .no-print {
+        display: none !important;
+    }
 }
