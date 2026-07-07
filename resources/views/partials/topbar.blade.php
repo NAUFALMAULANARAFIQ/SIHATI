@@ -1,4 +1,4 @@
-﻿@php
+@php
     $user = auth()->user();
     $isAdmin = $user?->role === 'admin';
     $userName = $user?->name ?? 'Pengguna';
