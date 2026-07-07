@@ -21,6 +21,10 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
+    public function show(Category $category){
+        return view('admin.categories.show', compact('category'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

@@ -15,9 +15,9 @@
 
             <div>
                 <label for="email" class="block text-sm font-medium text-sihati-charcoal mb-1.5">
-                    Email <span class="text-sihati-error">*</span>
+                    Email / Username <span class="text-sihati-error">*</span>
                 </label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email" required autofocus
+                <input type="text" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email atau username" required autofocus
                     class="h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('email') border-sihati-error @enderror">
                 @error('email')
                     <p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>

@@ -17,7 +17,7 @@
 <x-app-layout title="Dashboard Admin - SIHATI BPPKAD">
 <div class="space-y-6 animate-fade-in">
 
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4">
         <div>
             <h1 class="text-xl md:text-2xl font-bold text-sihati-ink tracking-tight">{{ $greeting }}, {{ $user->name }}!</h1>
             <p class="text-sihati-slate mt-1 text-sm">Kelola dan pantau semua aduan teknologi informasi</p>

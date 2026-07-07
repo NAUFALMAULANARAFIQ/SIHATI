@@ -21,6 +21,9 @@ class StatusController extends Controller
     {
         return view('admin.statuses.create');
     }
+    public function show(Status $status){
+        return view('admin.statuses.show', compact('status'));
+    }
 
     public function store(Request $request)
     {

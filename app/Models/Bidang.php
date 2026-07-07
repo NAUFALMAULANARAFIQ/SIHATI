@@ -12,6 +12,7 @@ class Bidang extends Model
     protected $fillable = [
         'nama_bidang',
         'keterangan',
+        'is_active',
     ];
 
     public function users()

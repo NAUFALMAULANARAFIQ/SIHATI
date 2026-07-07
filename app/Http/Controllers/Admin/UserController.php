@@ -20,7 +20,11 @@ class UserController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('admin.users.index', compact('users'));
+        $bidangs = Bidang::where('is_active', true)
+            ->orderBy('nama_bidang')
+            ->get();
+
+        return view('admin.users.index', compact('users', 'bidangs'));
     }
 
     public function create()
@@ -30,6 +34,10 @@ class UserController extends Controller
             ->get();
 
         return view('admin.users.create', compact('bidangs'));
+    }
+    public function show(User $user)
+    {
+        return view('admin.users.show', compact('user'));
     }
 
     public function store(Request $request)

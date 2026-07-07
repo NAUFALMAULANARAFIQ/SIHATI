@@ -9,18 +9,24 @@
     @stack('styles')
 </head>
 
-<body class="m-0 h-full overflow-hidden bg-sihati-surface text-sihati-ink font-notion antialiased">
-    <div class="flex h-screen overflow-hidden">
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-all duration-300 lg:w-16 lg:translate-x-0">
+<body class="m-0 min-h-dvh bg-sihati-surface text-sihati-ink font-notion antialiased">
+    <div class="flex h-dvh overflow-hidden">
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-transform duration-300 lg:w-16 lg:translate-x-0 lg:transition-all"
+            style="box-shadow: 4px 0 12px rgba(0,0,0,0.15);">
             @include('partials.sidebar')
         </aside>
 
-        <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden" onclick="toggleSidebar()"></div>
+        <div id="sidebar-overlay"
+            class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden"
+            onclick="closeSidebar()">
+        </div>
 
-        <div id="content-area" class="flex h-screen min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300 lg:ml-16">
+        <div id="content-area"
+            class="flex h-dvh min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300 lg:ml-16">
             @include('partials.topbar')
 
-            <main class="h-full min-h-0 flex-1 overflow-y-scroll px-4 pb-6 md:px-6 md:pb-8 lg:px-8">
+            <main class="min-h-0 flex-1 overflow-y-auto px-4 pb-6 md:px-6 md:pb-8 lg:px-8">
                 <div class="mx-auto max-w-7xl space-y-6">
                     @if(session('success'))
                         <div class="rounded-md border border-sihati-success/30 bg-sihati-mint px-4 py-3 text-sm text-sihati-success">
@@ -46,18 +52,33 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
+            min-height: 100%;
         }
 
-        body.sidebar-expanded #sidebar {
-            width: 288px;
+        .sidebar-label {
+            display: none;
+        }
+
+        /* Mobile / tablet: sidebar overlay */
+        body.sidebar-open #sidebar {
             transform: translateX(0);
         }
 
-        body.sidebar-expanded #content-area {
-            margin-left: 288px;
+        body.sidebar-open #sidebar-overlay {
+            display: block;
         }
 
+        @media (max-width: 1023px) {
+            body.sidebar-open #content-area {
+                margin-left: 0 !important;
+            }
+
+            body.sidebar-open .sidebar-label {
+                display: inline;
+            }
+        }
+
+        /* Desktop: sidebar collapse / expand */
         @media (min-width: 1024px) {
             #sidebar {
                 width: 64px;
@@ -71,20 +92,25 @@
             body.sidebar-expanded #content-area {
                 margin-left: 288px;
             }
-        }
 
-        .sidebar-label {
-            display: none;
-        }
-
-        body.sidebar-expanded .sidebar-label {
-            display: inline;
+            body.sidebar-expanded .sidebar-label {
+                display: inline;
+            }
         }
     </style>
 
     <script>
+        function isMobileSidebar() {
+            return window.innerWidth < 1024;
+        }
+
         function toggleSidebar() {
-            var isExpanded = document.body.classList.contains('sidebar-expanded');
+            if (isMobileSidebar()) {
+                document.body.classList.toggle('sidebar-open');
+                return;
+            }
+
+            const isExpanded = document.body.classList.contains('sidebar-expanded');
 
             if (isExpanded) {
                 document.body.classList.remove('sidebar-expanded');
@@ -95,27 +121,53 @@
             }
         }
 
-        function initSidebar() {
-            if (window.innerWidth >= 1024) {
-                var saved = localStorage.getItem('sidebar');
+        function closeSidebar() {
+            document.body.classList.remove('sidebar-open');
 
-                if (saved === 'expanded') {
-                    document.body.classList.add('sidebar-expanded');
-                }
+            if (!isMobileSidebar()) {
+                document.body.classList.remove('sidebar-expanded');
+                localStorage.setItem('sidebar', 'collapsed');
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initSidebar);
+        function closeSidebarOnMobile() {
+            if (isMobileSidebar()) {
+                document.body.classList.remove('sidebar-open');
+            }
+        }
 
-        window.addEventListener('resize', function() {
-            if (window.innerWidth < 1024) {
+        function initSidebar() {
+            document.body.classList.remove('sidebar-open');
+
+            if (isMobileSidebar()) {
+                document.body.classList.remove('sidebar-expanded');
+                return;
+            }
+
+            const saved = localStorage.getItem('sidebar');
+
+            if (saved === 'expanded') {
+                document.body.classList.add('sidebar-expanded');
+            } else {
                 document.body.classList.remove('sidebar-expanded');
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initSidebar();
+
+            document.querySelectorAll('#sidebar a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    closeSidebarOnMobile();
+                });
+            });
         });
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.body.classList.contains('sidebar-expanded')) {
-                toggleSidebar();
+        window.addEventListener('resize', initSidebar);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeSidebar();
             }
         });
     </script>

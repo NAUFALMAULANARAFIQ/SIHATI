@@ -1,6 +1,7 @@
 @php
     if (!isset($categories)) $categories = \App\Models\Category::all();
     if (!isset($priorities)) $priorities = \App\Models\Priority::all();
+    if (!isset($bidangs)) $bidangs = \App\Models\Bidang::all();
 @endphp
 
 <x-app-layout title="Buat Aduan - SIHATI BPPKAD">
@@ -22,6 +23,14 @@
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
+                    <label for="bidang_id" class="block text-sm font-medium text-sihati-charcoal">Bidang <span class="text-sihati-error">*</span></label>
+                    <select id="bidang_id" name="bidang_id" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('bidang_id') border-sihati-error @enderror">
+                        <option value="">Pilih bidang (default: bidang Anda)</option>
+                        @foreach ($bidangs as $b)<option value="{{ $b->id }}" {{ old('bidang_id', auth()->user()->bidang_id) == $b->id ? 'selected' : '' }}>{{ $b->nama_bidang }}</option>@endforeach
+                    </select>
+                    @error('bidang_id')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
+                </div>
+                <div>
                     <label for="category_id" class="block text-sm font-medium text-sihati-charcoal">Kategori <span class="text-sihati-error">*</span></label>
                     <select id="category_id" name="category_id" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('category_id') border-sihati-error @enderror">
                         <option value="">Pilih kategori</option>
@@ -29,6 +38,9 @@
                     </select>
                     @error('category_id')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
                 </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
                     <label for="priority_id" class="block text-sm font-medium text-sihati-charcoal">Prioritas <span class="text-sihati-error">*</span></label>
                     <select id="priority_id" name="priority_id" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('priority_id') border-sihati-error @enderror">
@@ -37,19 +49,17 @@
                     </select>
                     @error('priority_id')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
                 </div>
-            </div>
-
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
                     <label for="lokasi" class="block text-sm font-medium text-sihati-charcoal">Lokasi / Ruangan</label>
                     <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Ruang Bidang Anggaran Lt. 2"
                         class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                 </div>
-                <div>
-                    <label for="no_kontak" class="block text-sm font-medium text-sihati-charcoal">Nomor Kontak</label>
-                    <input type="text" id="no_kontak" name="no_kontak" value="{{ old('no_kontak') }}" placeholder="Contoh: 08123456789"
-                        class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
-                </div>
+            </div>
+
+            <div>
+                <label for="no_kontak" class="block text-sm font-medium text-sihati-charcoal">Nomor Kontak</label>
+                <input type="text" id="no_kontak" name="no_kontak" value="{{ old('no_kontak') }}" placeholder="Contoh: 08123456789"
+                    class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
             </div>
 
             <div>
@@ -65,8 +75,9 @@
                     <svg class="mb-2 h-8 w-8 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
                     <p class="text-sm font-medium text-sihati-charcoal">Upload lampiran</p>
                     <p class="mt-1 text-xs text-sihati-steel">Format JPG, PNG, atau PDF. Maksimal 5 MB.</p>
-                    <input type="file" id="attachments" name="attachments[]" class="hidden" accept=".jpg,.jpeg,.png,.pdf" multiple>
+                    <input type="file" id="attachments" name="attachments[]" class="hidden" accept=".jpg,.jpeg,.png,.pdf" multiple data-file-upload="attachmentPreview">
                 </label>
+                <div id="attachmentPreview" class="mt-2 flex flex-wrap gap-2"></div>
                 @error('attachments')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
             </div>
 
