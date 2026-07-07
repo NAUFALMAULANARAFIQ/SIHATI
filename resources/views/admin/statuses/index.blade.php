@@ -80,7 +80,7 @@
 
                                             <form action="{{ route('admin.statuses.destroy', $status) }}"
                                                   method="POST"
-                                                  onsubmit="return confirm('Yakin ingin menghapus status ini?')">
+                                                  onsubmit="return confirm('Anda yakin ingin menghapus status ini?')">
                                                 @csrf
                                                 @method('DELETE')
 

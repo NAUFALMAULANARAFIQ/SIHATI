@@ -67,26 +67,26 @@
 <div class="mt-6">{{ $aduans->links() }}</div>
 @endif
 
-<div id="buatAduanModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
-    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-white p-6 shadow-modal">
-        <div class="flex items-center justify-between border-b border-gray-200 pb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Buat Aduan Baru</h2>
-            <button type="button" onclick="closeModal('buatAduanModal')" class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+<div id="buatAduanModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/40 px-4 overflow-y-auto">
+    <div class="w-full max-w-2xl rounded-xl bg-sihati-canvas p-6 shadow-modal animate-slide-up my-4 md:my-8">
+        <div class="flex items-center justify-between border-b border-sihati-hairline pb-4">
+            <h2 class="text-lg font-semibold text-sihati-ink">Buat Aduan Baru</h2>
+            <button type="button" onclick="closeModal('buatAduanModal')" class="rounded-md p-1.5 text-sihati-stone hover:bg-sihati-surface">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <form method="POST" action="{{ route('pegawai.aduan.store') }}" enctype="multipart/form-data" class="space-y-5 pt-5">
+        <form method="POST" action="{{ route('pegawai.aduan.store') }}" enctype="multipart/form-data" class="space-y-5 pt-6">
             @csrf
             <div>
-                <label class="block text-sm font-medium text-gray-700">Judul Aduan <span class="text-red-500">*</span></label>
-                <input type="text" name="judul" value="{{ old('judul') }}" placeholder="Contoh: Printer tidak bisa mencetak" required
-                    class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="judul" class="block text-sm font-medium text-sihati-charcoal">Judul Aduan <span class="text-sihati-error">*</span></label>
+                <input type="text" name="judul" id="judul" value="{{ old('judul') }}" placeholder="Contoh: Printer tidak bisa mencetak" required
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
             </div>
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Bidang <span class="text-red-500">*</span></label>
-                    <select name="bidang_id" required
-                        class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <label for="bidang_id" class="block text-sm font-medium text-sihati-charcoal">Bidang <span class="text-sihati-error">*</span></label>
+                    <select name="bidang_id" id="bidang_id" required
+                        class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="">Pilih bidang</option>
                         @foreach ($bidangs as $b)
                         <option value="{{ $b->id }}" {{ old('bidang_id', auth()->user()->bidang_id) == $b->id ? 'selected' : '' }}>{{ $b->nama_bidang }}</option>
@@ -94,9 +94,9 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Kategori <span class="text-red-500">*</span></label>
-                    <select name="category_id" required
-                        class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <label for="category_id" class="block text-sm font-medium text-sihati-charcoal">Kategori <span class="text-sihati-error">*</span></label>
+                    <select name="category_id" id="category_id" required
+                        class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="">Pilih kategori</option>
                         @foreach ($categories as $cat)
                         <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nama_kategori }}</option>
@@ -106,9 +106,9 @@
             </div>
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Prioritas <span class="text-red-500">*</span></label>
-                    <select name="priority_id"
-                        class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <label for="priority_id" class="block text-sm font-medium text-sihati-charcoal">Prioritas <span class="text-sihati-error">*</span></label>
+                    <select name="priority_id" id="priority_id"
+                        class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="">Pilih prioritas</option>
                         @foreach ($priorities as $pr)
                         <option value="{{ $pr->id }}" {{ old('priority_id') == $pr->id ? 'selected' : '' }}>{{ $pr->nama_prioritas }}</option>
@@ -116,30 +116,34 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Lokasi / Ruangan</label>
-                    <input type="text" name="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Ruang Bidang Anggaran Lt. 2"
-                        class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <label for="lokasi" class="block text-sm font-medium text-sihati-charcoal">Lokasi / Ruangan</label>
+                    <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Ruang Bidang Anggaran Lt. 2"
+                        class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                 </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Nomor Kontak</label>
-                <input type="text" name="no_kontak" value="{{ old('no_kontak') }}" placeholder="Contoh: 08123456789"
-                    class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="no_kontak" class="block text-sm font-medium text-sihati-charcoal">Nomor Kontak</label>
+                <input type="text" name="no_kontak" id="no_kontak" value="{{ old('no_kontak') }}" placeholder="Contoh: 08123456789"
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Deskripsi Masalah <span class="text-red-500">*</span></label>
-                <textarea name="deskripsi" rows="4" placeholder="Jelaskan kendala yang dialami secara lengkap." required
-                    class="mt-1.5 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ old('deskripsi') }}</textarea>
+                <label for="deskripsi" class="block text-sm font-medium text-sihati-charcoal">Deskripsi Masalah <span class="text-sihati-error">*</span></label>
+                <textarea name="deskripsi" id="deskripsi" rows="4" placeholder="Jelaskan kendala yang dialami secara lengkap." required
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">{{ old('deskripsi') }}</textarea>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Lampiran (opsional)</label>
-                <input type="file" name="attachments[]" multiple accept=".jpg,.jpeg,.png,.pdf"
-                    class="mt-1.5 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <p class="mt-1 text-xs text-gray-500">Format JPG, PNG, atau PDF. Maksimal 5 MB.</p>
+                <label class="block text-sm font-medium text-sihati-charcoal">Lampiran (opsional)</label>
+                <label for="attachments" class="mt-1.5 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-sihati-hairline-strong bg-sihati-surface-soft p-5 transition hover:border-sihati-primary hover:bg-sihati-lavender/20">
+                    <svg class="mb-2 h-8 w-8 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    <p class="text-sm font-medium text-sihati-charcoal">Upload lampiran</p>
+                    <p class="mt-1 text-xs text-sihati-steel">Format JPG, PNG, atau PDF. Maksimal 5 MB.</p>
+                    <input type="file" id="attachments" name="attachments[]" class="hidden" accept=".jpg,.jpeg,.png,.pdf" multiple data-file-upload="attachmentPreview">
+                </label>
+                <div id="attachmentPreview" class="mt-2 flex flex-wrap gap-2"></div>
             </div>
-            <div class="flex justify-end gap-3 border-t border-gray-200 pt-5">
-                <button type="button" onclick="closeModal('buatAduanModal')" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Batal</button>
-                <button type="submit" class="rounded-md bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700">Kirim Aduan</button>
+            <div class="flex items-center justify-end gap-3 border-t border-sihati-hairline pt-6">
+                <button type="button" onclick="closeModal('buatAduanModal')" class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>
+                <button type="submit" class="rounded-md bg-sihati-primary px-5 py-2 text-sm font-medium text-sihati-on-primary hover:bg-sihati-primary-pressed focus:outline-none focus:ring-2 focus:ring-sihati-primary focus:ring-offset-2">Kirim Aduan</button>
             </div>
         </form>
     </div>

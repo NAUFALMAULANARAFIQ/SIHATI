@@ -21,16 +21,17 @@
 
 <header class="sticky top-0 z-30 border-b border-sihati-hairline bg-sihati-canvas">
     <div class="flex h-16 items-center justify-between px-4 md:px-6">
-        <div class="flex items-center gap-3 md:gap-4">
+        <div class="flex items-center gap-3">
             <button onclick="toggleSidebar()"
-                class="flex h-9 w-9 items-center justify-center rounded-md text-sihati-slate hover:bg-sihati-surface">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="flex h-9 w-9 items-center justify-center rounded-md text-sihati-slate hover:bg-sihati-surface lg:hidden">
+                <svg class="sidebar-closed-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
+                <svg class="sidebar-open-icon hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
             </button>
-            <div>
-                <h1 class="text-lg font-semibold text-sihati-ink">{{ $pageTitle }}</h1>
-            </div>
+            <h1 class="text-lg font-semibold text-sihati-ink">{{ $pageTitle }}</h1>
         </div>
 
         <div class="relative flex items-center gap-2">
