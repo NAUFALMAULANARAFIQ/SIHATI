@@ -1,4 +1,4 @@
-﻿@php
+@php
     $user = auth()->user();
     $isAdmin = $user?->role === 'admin';
     $userName = $user?->name ?? 'Pengguna';
@@ -18,8 +18,7 @@
         default => 'SIHATI BPPKAD'
     };
 @endphp
-
-<header class="sticky top-0 z-30 border-b border-sihati-hairline bg-sihati-canvas">
+<header class="sticky top-0 left-0 right-0 z-30 border-b border-sihati-hairline bg-sihati-canvas">
     <div class="flex h-16 items-center justify-between px-4 md:px-6">
         <div class="flex items-center gap-3 md:gap-4">
             <button onclick="toggleSidebar()"

@@ -12,13 +12,13 @@
 <body class="m-0 h-full overflow-hidden bg-sihati-surface text-sihati-ink font-notion antialiased">
     <div class="flex h-screen overflow-hidden">
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-all duration-300 lg:w-16 lg:translate-x-0">
-            @include('partials.sidebar')
+        @include('partials.sidebar')
         </aside>
 
         <div id="sidebar-overlay" class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden" onclick="toggleSidebar()"></div>
 
         <div id="content-area" class="flex h-screen min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300 lg:ml-16">
-            @include('partials.topbar')
+        @include('partials.topbar')
 
             <main class="h-full min-h-0 flex-1 overflow-y-scroll px-4 pb-6 md:px-6 md:pb-8 lg:px-8">
                 <div class="mx-auto max-w-7xl space-y-6">
@@ -119,7 +119,6 @@
             }
         });
     </script>
-
     @stack('scripts')
 </body>
 </html>

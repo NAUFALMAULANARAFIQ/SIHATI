@@ -22,6 +22,11 @@ class BidangController extends Controller
         return view('admin.bidangs.create');
     }
 
+    public function show(Bidang $bidang)
+    {
+        return view('admin.bidangs.show', compact('bidang'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
