@@ -32,18 +32,6 @@
 
             <main class="min-h-0 flex-1 overflow-y-auto px-4 pb-6 md:px-6 md:pb-8 lg:px-8">
                 <div class="mx-auto max-w-7xl space-y-6">
-                    @if(session('success'))
-                        <div class="rounded-md border border-sihati-success/30 bg-sihati-mint px-4 py-3 text-sm text-sihati-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="rounded-md border border-sihati-error/30 bg-sihati-rose px-4 py-3 text-sm text-sihati-error">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
                     {{ $slot }}
                 </div>
             </main>
@@ -207,6 +195,8 @@
             }
         });
     </script>
+
+    @include('partials.toast-notifications')
 
     @stack('scripts')
 </body>

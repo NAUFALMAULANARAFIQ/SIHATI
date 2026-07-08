@@ -220,7 +220,6 @@
                     <th>Kategori</th>
                     <th>Prioritas</th>
                     <th>Status</th>
-                    <th>Petugas</th>
                     <th>Tgl. Selesai</th>
                 </tr>
             </thead>
@@ -235,12 +234,11 @@
                     <td>{{ $aduan->category?->nama_kategori ?? '-' }}</td>
                     <td class="center">{{ $aduan->priority?->nama_prioritas ?? '-' }}</td>
                     <td class="status">{{ $aduan->status?->nama_status ?? $aduan->status?->kode_status ?? '-' }}</td>
-                    <td>{{ $aduan->petugas?->name ?? '-' }}</td>
                     <td>{{ $aduan->tanggal_selesai ? \Carbon\Carbon::parse($aduan->tanggal_selesai)->isoFormat('DD-MM-Y') : '-' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" class="empty-row">Tidak ada data untuk periode yang dipilih.</td>
+                    <td colspan="9" class="empty-row">Tidak ada data untuk periode yang dipilih.</td>
                 </tr>
                 @endforelse
             </tbody>

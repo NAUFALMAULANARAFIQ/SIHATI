@@ -1,8 +1,8 @@
 <x-app-layout title="Daftar Aduan - SIHATI BPPKAD">
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
     <div>
-        <h1 class="mt-1 text-2xl font-semibold tracking-[-0.02em] text-sihati-ink">Daftar Aduan</h1>
-        <p class="mt-1 text-sm leading-6 text-sihati-slate">Kelola dan pantau seluruh aduan teknologi informasi.</p>
+        <h1 class="text-xl md:text-2xl font-bold text-sihati-ink tracking-tight">Daftar Aduan</h1>
+        <p class="text-sihati-slate mt-1 text-sm">Kelola dan pantau seluruh aduan teknologi informasi.</p>
     </div>
     <button onclick="openModal('createAduanModal')" class="inline-flex h-10 items-center gap-2 rounded-md bg-sihati-primary px-4 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed">
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>

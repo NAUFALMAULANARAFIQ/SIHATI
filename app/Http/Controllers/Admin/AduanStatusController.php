@@ -13,7 +13,7 @@ class AduanStatusController extends Controller
     public function update(UpdateStatusRequest $request, Aduan $aduan)
     {
         try {
-            AduanService::changeStatus(
+            $aduan = AduanService::changeStatus(
                 $aduan,
                 $request->status_kode,
                 Auth::id(),

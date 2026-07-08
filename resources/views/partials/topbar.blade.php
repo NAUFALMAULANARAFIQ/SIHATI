@@ -71,9 +71,9 @@
                         </a>
                     </div>
                     <div class="border-t border-sihati-hairline-soft py-1">
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form id="logoutForm" method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit"
+                            <button type="button" onclick="confirmLogout()"
                                 class="flex w-full items-center gap-3 px-4 py-2 text-sm text-sihati-error transition hover:bg-sihati-rose">
                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                                     <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -82,6 +82,33 @@
                             </button>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Logout Confirmation Modal --}}
+        <div id="logoutConfirmModal"
+            class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/40 p-4"
+            onclick="if(event.target===this)closeLogoutModal()">
+            <div class="w-full max-w-sm animate-scale-in rounded-xl bg-sihati-canvas p-6 shadow-modal">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-sihati-rose">
+                        <svg class="h-5 w-5 text-sihati-error" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-sihati-ink">Konfirmasi Logout</h3>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-sihati-slate">Apakah Anda yakin ingin keluar dari akun ini?</p>
+                <div class="mt-6 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeLogoutModal()"
+                        class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink transition hover:bg-sihati-surface">
+                        Batal
+                    </button>
+                    <button type="button" onclick="submitLogout()"
+                        class="rounded-md bg-sihati-error px-5 py-2 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-sihati-error focus:ring-offset-2">
+                        Logout
+                    </button>
                 </div>
             </div>
         </div>
@@ -103,6 +130,33 @@
                 const dropdown = document.getElementById('userDropdown');
                 if (!e.target.closest('[onclick*="toggleUserMenu"]') && !e.target.closest('#userDropdown')) {
                     dropdown?.classList.add('hidden');
+                }
+            });
+
+            /* ── Logout confirmation modal ── */
+            window.confirmLogout = function() {
+                var modal = document.getElementById('logoutConfirmModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+
+            window.closeLogoutModal = function() {
+                var modal = document.getElementById('logoutConfirmModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+
+            window.submitLogout = function() {
+                closeLogoutModal();
+                document.getElementById('logoutForm').submit();
+            };
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    var modal = document.getElementById('logoutConfirmModal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        closeLogoutModal();
+                    }
                 }
             });
         </script>

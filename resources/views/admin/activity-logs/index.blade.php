@@ -10,10 +10,10 @@
 @endphp
 
 <x-app-layout title="Log Aktivitas - SIHATI BPPKAD">
-<div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
     <div>
-        <h1 class="text-2xl font-semibold tracking-[-0.02em] text-sihati-ink">Log Aktivitas</h1>
-        <p class="mt-1 text-sm leading-6 text-sihati-slate">Riwayat aktivitas yang dilakukan oleh seluruh pengguna sistem.</p>
+        <h1 class="text-xl md:text-2xl font-bold text-sihati-ink tracking-tight">Log Aktivitas</h1>
+        <p class="text-sihati-slate mt-1 text-sm">Riwayat aktivitas yang dilakukan oleh seluruh pengguna sistem.</p>
     </div>
     <div class="relative">
         <button onclick="toggleFilter()" class="inline-flex h-10 items-center gap-2 rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm font-medium text-sihati-ink transition hover:bg-sihati-surface">
