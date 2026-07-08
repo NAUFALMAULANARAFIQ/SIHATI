@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Pegawai;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aduan;
+use App\Models\Bidang;
+use App\Models\Category;
+use App\Models\Priority;
 use App\Services\AduanService;
 use App\Http\Requests\Aduan\StoreAduanRequest;
 use Illuminate\Http\Request;
@@ -35,7 +38,11 @@ class AduanController extends Controller
 
         $aduans = $query->latest('tanggal_aduan')->paginate(10);
 
-        return view('pegawai.aduan.index', compact('aduans'));
+        $categories = Category::where('is_active', true)->get();
+        $priorities = Priority::all();
+        $bidangs = Bidang::all();
+
+        return view('pegawai.aduan.index', compact('aduans', 'categories', 'priorities', 'bidangs'));
     }
 
     public function create()

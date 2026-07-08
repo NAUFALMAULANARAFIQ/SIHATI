@@ -22,11 +22,6 @@ class BidangController extends Controller
         return view('admin.bidangs.create');
     }
 
-    public function show(Bidang $bidang)
-    {
-        return view('admin.bidangs.show', compact('bidang'));
-    }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -36,14 +31,7 @@ class BidangController extends Controller
                 'max:100',
                 Rule::unique('bidangs', 'nama_bidang'),
             ],
-            'kode_bidang' => [
-                'nullable',
-                'string',
-                'max:20',
-                'alpha_dash',
-                Rule::unique('bidangs', 'kode_bidang'),
-            ],
-            'deskripsi' => [
+            'keterangan' => [
                 'nullable',
                 'string',
                 'max:1000',
@@ -89,14 +77,7 @@ class BidangController extends Controller
                 'max:100',
                 Rule::unique('bidangs', 'nama_bidang')->ignore($bidang->id),
             ],
-            'kode_bidang' => [
-                'nullable',
-                'string',
-                'max:20',
-                'alpha_dash',
-                Rule::unique('bidangs', 'kode_bidang')->ignore($bidang->id),
-            ],
-            'deskripsi' => [
+            'keterangan' => [
                 'nullable',
                 'string',
                 'max:1000',

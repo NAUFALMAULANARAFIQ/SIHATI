@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Pegawai;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aduan;
+use App\Models\Bidang;
+use App\Models\Category;
+use App\Models\Priority;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,12 +36,19 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $categories = Category::where('is_active', true)->get();
+        $priorities = Priority::all();
+        $bidangs = Bidang::all();
+
         return view('pegawai.dashboard', compact(
             'totalAduan',
             'aduanDiterima',
             'aduanDiproses',
             'aduanSelesai',
-            'aduanTerbaru'
+            'aduanTerbaru',
+            'categories',
+            'priorities',
+            'bidangs'
         ));
     }
 }

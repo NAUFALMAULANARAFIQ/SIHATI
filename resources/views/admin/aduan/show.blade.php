@@ -1,4 +1,7 @@
-@php $statusKey = $aduan->status?->kode_status ?? strtolower($aduan->status?->nama_status ?? ''); @endphp
+@php
+    $statusKey = $aduan->status?->kode_status ?? strtolower($aduan->status?->nama_status ?? '');
+    $pelaporRating = $aduan->ratings->firstWhere('user_id', $aduan->pelapor_id);
+@endphp
 
 <x-app-layout :title="$aduan->nomor_tiket . ' - SIHATI BPPKAD'">
 <nav class="mb-4 text-sm text-sihati-steel">
@@ -38,9 +41,19 @@
             <div class="mt-3 text-sm leading-6 text-sihati-slate whitespace-pre-line">{{ $aduan->deskripsi ?? 'Tidak ada deskripsi.' }}</div>
         </div>
 
-        @if($aduan->attachments && $aduan->attachments->isNotEmpty())
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
-            <h3 class="text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Lampiran</h3>
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Lampiran</h3>
+                <label for="uploadAttachment" class="inline-flex cursor-pointer items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium text-sihati-primary hover:bg-sihati-surface">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Upload
+                </label>
+            </div>
+            <form method="POST" action="{{ route('admin.aduan.attachments.store', $aduan) }}" enctype="multipart/form-data" class="mt-3">
+                @csrf
+                <input type="file" id="uploadAttachment" name="file" accept=".jpg,.jpeg,.png,.pdf" class="hidden" onchange="this.form.submit()">
+            </form>
+            @if($aduan->attachments && $aduan->attachments->isNotEmpty())
             <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 @foreach ($aduan->attachments as $att)
                 <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank" class="flex items-center gap-2 rounded-md border border-sihati-hairline-soft p-3 text-sm transition hover:bg-sihati-surface-soft">
@@ -49,8 +62,10 @@
                 </a>
                 @endforeach
             </div>
+            @else
+            <p class="mt-3 text-sm text-sihati-slate">Belum ada lampiran.</p>
+            @endif
         </div>
-        @endif
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <div class="mb-4 flex items-center justify-between">
@@ -69,7 +84,7 @@
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Komentar &amp; Diskusi</h3>
-            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan), 'showAttachment' => true])
+            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan)])
         </div>
     </div>
 
@@ -94,6 +109,24 @@
                 @if($aduan->tanggal_selesai)<div><p class="text-xs text-sihati-steel">Selesai</p><p class="text-sm font-semibold text-sihati-success">{{ \Carbon\Carbon::parse($aduan->tanggal_selesai)->isoFormat('DD-MM-Y HH:mm') }}</p></div>@endif
             </div>
         </div>
+
+        @if($pelaporRating)
+        <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Rating & Ulasan</h3>
+            <div class="mt-3 flex items-center gap-1">
+                @for ($i = 1; $i <= 5; $i++)
+                <svg class="h-5 w-5 {{ $i <= $pelaporRating->rating ? 'text-sihati-yellow-bold' : 'text-sihati-hairline-strong' }}" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                </svg>
+                @endfor
+                <span class="ml-1 text-sm font-medium text-sihati-charcoal">{{ $pelaporRating->rating }}/5</span>
+            </div>
+            <div class="mt-1 text-xs text-sihati-slate">oleh {{ $pelaporRating->user?->name ?? 'Pelapor' }}</div>
+            @if($pelaporRating->komentar)
+            <div class="mt-3 whitespace-pre-line text-sm leading-6 text-sihati-slate">{{ $pelaporRating->komentar }}</div>
+            @endif
+        </div>
+        @endif
     </div>
 </div>
 
@@ -111,7 +144,7 @@
             @csrf @method('PATCH')
             <div>
                 <label for="status" class="block text-sm font-medium text-sihati-charcoal">Status Baru <span class="text-sihati-error">*</span></label>
-                <select id="status" name="status" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
+                <select id="status_kode" name="status_kode" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                     <option value="">Pilih status</option>
                     @foreach (\App\Models\Status::all() as $st)<option value="{{ $st->kode_status }}" {{ $st->kode_status === $statusKey ? 'disabled' : '' }}>{{ $st->nama_status }} {{ $st->kode_status === $statusKey ? '(saat ini)' : '' }}</option>@endforeach
                 </select>

@@ -7,6 +7,7 @@ use App\Models\AduanAttachment;
 use App\Models\AduanComment;
 use App\Models\AduanNote;
 use App\Models\Rating;
+use App\Models\Status;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
@@ -17,6 +18,7 @@ class AduanService
     {
         return DB::transaction(function () use ($data, $pelaporId, $attachments) {
             $nomorTiket = TicketService::generate();
+            $statusDiterima = Status::where('kode_status', 'diterima')->firstOrFail();
 
             $aduan = Aduan::create([
                 'nomor_tiket' => $nomorTiket,
@@ -24,6 +26,7 @@ class AduanService
                 'bidang_id' => $data['bidang_id'],
                 'category_id' => $data['category_id'],
                 'priority_id' => $data['priority_id'] ?? null,
+                'status_id' => $statusDiterima->id,
                 'judul' => $data['judul'],
                 'deskripsi' => $data['deskripsi'],
                 'lokasi' => $data['lokasi'] ?? null,

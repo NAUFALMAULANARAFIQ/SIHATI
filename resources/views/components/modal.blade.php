@@ -22,12 +22,11 @@
 @endphp
 
 <!-- Modal Backdrop -->
-<div id="{{ $id }}-backdrop" class="fixed inset-0 z-50 hidden">
+<div id="{{ $id }}" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
     <div class="modal-backdrop absolute inset-0" onclick="closeModal('{{ $id }}')"></div>
     
     <!-- Modal Content -->
-    <div class="flex items-center justify-center min-h-full p-4">
-        <div id="{{ $id }}" class="{{ $modalClasses }} {{ $sizeClasses }}" onclick="event.stopPropagation()">
+    <div class="{{ $modalClasses }} {{ $sizeClasses }}" onclick="event.stopPropagation()">
             <!-- Modal Header -->
             @if($title || $showClose)
             <div class="flex items-center justify-between px-6 py-4 border-b border-hairline {{ $scrollable ? 'flex-shrink-0' : '' }}">
@@ -55,23 +54,22 @@
                 {{ $footer }}
             </div>
             @endif
-        </div>
     </div>
 </div>
 
 <script>
     function openModal(id) {
-        const backdrop = document.getElementById(id + '-backdrop');
-        if (backdrop) {
-            backdrop.classList.remove('hidden');
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
     }
     
     function closeModal(id) {
-        const backdrop = document.getElementById(id + '-backdrop');
-        if (backdrop) {
-            backdrop.classList.add('hidden');
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.add('hidden');
             document.body.style.overflow = '';
         }
     }
@@ -79,10 +77,9 @@
     // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            const modals = document.querySelectorAll('[id$="-backdrop"]:not(.hidden)');
+            const modals = document.querySelectorAll('[id$="Modal"]:not(.hidden), [id$="-backdrop"]:not(.hidden)');
             modals.forEach(modal => {
-                const id = modal.id.replace('-backdrop', '');
-                closeModal(id);
+                closeModal(modal.id);
             });
         }
     });
