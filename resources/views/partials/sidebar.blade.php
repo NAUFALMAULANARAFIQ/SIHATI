@@ -16,7 +16,7 @@
 @endphp
 
 <div class="flex h-full flex-col bg-sihati-navy">
-    <div class="sidebar-header flex w-full items-center justify-between gap-3 px-3 py-4">
+    <div class="sidebar-header flex w-full items-center justify-between gap-3 px-5 py-4">
     <a href="{{ route($isAdmin ? 'admin.dashboard' : 'pegawai.dashboard') }}"
         class="sidebar-logo flex min-w-0 items-center gap-3"
         onclick="closeSidebarOnMobile()">
@@ -47,7 +47,7 @@
 
         <nav class="flex-1 space-y-1">
             <a href="{{ route($isAdmin ? 'admin.dashboard' : 'pegawai.dashboard') }}"
-                class="flex items-center justify-start gap-3 rounded-md px-2 py-2.5 text-sm font-medium transition lg:justify-start lg:px-3 {{ isActive(['pegawai.dashboard', 'admin.dashboard']) ? 'bg-sihati-primary text-white' : 'text-sihati-on-dark/80 hover:bg-white/10 hover:text-sihati-on-dark' }}">
+                class="flex items-center justify-start gap-3 rounded-md px-3 py-3 text-sm font-medium transition lg:justify-start lg:px-3 {{ isActive(['pegawai.dashboard', 'admin.dashboard']) ? 'bg-sihati-primary text-white' : 'text-sihati-on-dark/80 hover:bg-white/10 hover:text-sihati-on-dark' }}">
                 <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>

@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'SIHATI BPPKAD' }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/icon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 
 <body class="m-0 min-h-dvh bg-sihati-surface text-sihati-ink font-notion antialiased">
+    {{-- Set sidebar state immediately before first paint to prevent flash --}}
+    <script>(function(){var s=localStorage.getItem('sidebar');if(s==='expanded'){document.body.classList.add('sidebar-expanded')}})()</script>
+
     <div class="flex h-dvh overflow-hidden">
         <aside id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-transform duration-300 lg:w-16 lg:translate-x-0 lg:transition-all"
+            class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-transform duration-150 lg:w-16 lg:translate-x-0 lg:transition-all"
             style="box-shadow: 4px 0 12px rgba(0,0,0,0.15);">
             @include('partials.sidebar')
         </aside>
@@ -23,7 +27,7 @@
         </div>
 
         <div id="content-area"
-            class="flex h-dvh min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300 lg:ml-16">
+            class="flex h-dvh min-w-0 flex-1 flex-col overflow-hidden transition-all duration-150 lg:ml-16">
             @include('partials.topbar')
 
             <main class="min-h-0 flex-1 overflow-y-auto px-4 pb-6 md:px-6 md:pb-8 lg:px-8">
@@ -186,7 +190,11 @@
 
             document.querySelectorAll('#sidebar a').forEach(function (link) {
                 link.addEventListener('click', function () {
-                    closeSidebarOnMobile();
+                    if (isMobileSidebar()) {
+                        // Disable transition so sidebar closes instantly before navigation
+                        document.getElementById('sidebar').style.transition = 'none';
+                        document.body.classList.remove('sidebar-open');
+                    }
                 });
             });
         });
