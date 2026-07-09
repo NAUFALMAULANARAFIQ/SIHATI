@@ -2,92 +2,8 @@
     $user = auth()->user();
     $isAdmin = $user?->role === 'admin';
 
-    // ─── Dummy notifications ───────────────────────────────────────────
-    // These simulate data that would later come from a controller.
-    // Remove this block and use $notifications / $unreadNotificationCount
-    // once the backend is ready.
-
-    $dummyNotifications = $isAdmin ? [
-        [
-            'id'          => 1,
-            'type'        => 'new',
-            'title'       => 'Aduan Baru Masuk',
-            'description' => 'Budi Santoso mengajukan aduan baru: "Server Sering Mati" di Bidang Infrastruktur.',
-            'time'        => '5 menit lalu',
-            'unread'      => true,
-        ],
-        [
-            'id'          => 2,
-            'type'        => 'priority',
-            'title'       => 'Aduan Prioritas Tinggi',
-            'description' => 'Aduan "Jaringan Putus Total" mendapat prioritas tinggi dan perlu segera ditangani.',
-            'time'        => '15 menit lalu',
-            'unread'      => true,
-        ],
-        [
-            'id'          => 3,
-            'type'        => 'comment',
-            'title'       => 'Komentar Baru dari Pegawai',
-            'description' => 'Siti Nurhaliza menambahkan komentar pada aduan #042: "Mohon segera ditindaklanjuti."',
-            'time'        => '1 jam lalu',
-            'unread'      => true,
-        ],
-        [
-            'id'          => 4,
-            'type'        => 'followup',
-            'title'       => 'Aduan Perlu Ditindaklanjuti',
-            'description' => 'Aduan "Printer Rusak" sudah 3 hari belum mendapat tindak lanjut dari petugas.',
-            'time'        => '3 jam lalu',
-            'unread'      => false,
-        ],
-        [
-            'id'          => 5,
-            'type'        => 'report',
-            'title'       => 'Laporan Bulanan Tersedia',
-            'description' => 'Laporan aduan bulan Juni 2026 telah siap untuk diunduh.',
-            'time'        => 'Kemarin',
-            'unread'      => false,
-        ],
-    ] : [
-        [
-            'id'          => 1,
-            'type'        => 'status',
-            'title'       => 'Status Aduan Diperbarui',
-            'description' => 'Aduan "Printer Rusak" telah diterima dan sedang dalam proses pengecekan oleh petugas.',
-            'time'        => '10 menit lalu',
-            'unread'      => true,
-        ],
-        [
-            'id'          => 2,
-            'type'        => 'reply',
-            'title'       => 'Tanggapan dari Petugas',
-            'description' => 'Petugas menambahkan tanggapan pada aduan "Email Error": "Kami sedang memperbaiki, harap tunggu."',
-            'time'        => '30 menit lalu',
-            'unread'      => true,
-        ],
-        [
-            'id'          => 3,
-            'type'        => 'completed',
-            'title'       => 'Aduan Selesai Diproses',
-            'description' => 'Aduan "Aplikasi Tidak Bisa Dibuka" telah selesai diproses oleh petugas.',
-            'time'        => '2 jam lalu',
-            'unread'      => true,
-        ],
-        [
-            'id'          => 4,
-            'type'        => 'revision',
-            'title'       => 'Informasi Tambahan Diperlukan',
-            'description' => 'Aduan "Data Tidak Muncul" membutuhkan informasi tambahan dari Anda. Silakan lengkapi data.',
-            'time'        => '5 jam lalu',
-            'unread'      => false,
-        ],
-    ];
-
-    // Use $notifications from controller if available, otherwise fallback to dummy
-    $notifications = $notifications ?? $dummyNotifications;
-
-    // Use $unreadNotificationCount from controller if available, otherwise calculate from dummy
-    $unreadCount = $unreadNotificationCount ?? collect($notifications)->where('unread', true)->count();
+    $notifications = $notifications ?? collect();
+    $unreadCount = $unreadNotificationCount ?? 0;
 
     // ─── Icon mapping ──────────────────────────────────────────────────
     $iconMap = [
@@ -154,14 +70,14 @@
             @forelse($notifications as $notif)
                 @php
                     $icon = $iconMap[$notif['type']] ?? $iconMap['new'];
-                    $isUnread = $notif['unread'] ?? false;
+                    $isUnread = !$notif->is_read;
                 @endphp
-                <a href="#"
+                <a href="{{ $notif->url }}"
                     role="menuitem"
                     class="group flex items-start gap-3 px-4 py-3 text-left transition
                         {{ $isUnread ? 'bg-sihati-surface' : 'hover:bg-sihati-surface/50' }}
                         hover:bg-sihati-surface"
-                    onclick="event.preventDefault(); {{ $isUnread ? "markNotificationRead(this, {$notif['id']})" : '' }}">
+                    onclick="markNotificationRead(this, {{ $notif->id }}, '{{ $notif->url }}'); return false;">
                     {{-- Icon --}}
                     <span class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full {{ $icon['bg'] }} {{ $icon['color'] }}">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
@@ -173,17 +89,17 @@
                     <div class="min-w-0 flex-1">
                         <div class="flex items-start justify-between gap-2">
                             <p class="text-sm font-medium text-sihati-ink {{ $isUnread ? '' : '' }}">
-                                {{ $notif['title'] }}
+                                {{ $notif->title }}
                             </p>
                             @if($isUnread)
                                 <span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-sihati-primary" aria-label="Belum dibaca"></span>
                             @endif
                         </div>
                         <p class="mt-0.5 text-xs text-sihati-slate line-clamp-2 leading-relaxed">
-                            {{ $notif['description'] }}
+                            {{ $notif->description }}
                         </p>
                         <p class="mt-1 text-[11px] text-sihati-steel">
-                            {{ $notif['time'] }}
+                            {{ $notif->created_at->diffForHumans() }}
                         </p>
                     </div>
                 </a>
@@ -257,44 +173,63 @@
      * Mark a single notification as read (frontend only).
      * Hides the blue dot and removes the highlighted background.
      */
-    function markNotificationRead(el, id) {
-        // Remove unread background
-        el.classList.remove('bg-sihati-surface');
-        // Remove the unread dot
-        const dot = el.querySelector('span.rounded-full.bg-sihati-primary');
-        if (dot) dot.remove();
-        // Update badge count
-        const badge = document.getElementById('notificationBadge');
-        if (badge) {
-            const current = parseInt(badge.textContent);
-            if (current > 1) {
-                badge.textContent = current - 1;
-            } else {
-                badge.remove();
-                document.getElementById('markAllReadBtn')?.remove();
-            }
-        }
-    }
+    async function markNotificationRead(el,id,url){
 
+        const response = await fetch(`/notifications/${id}/read`,{
+
+            method:'POST',
+
+            headers:{
+                'X-CSRF-TOKEN':
+                document.querySelector('meta[name="csrf-token"]').content,
+
+                'Accept':'application/json'
+            }
+
+        });
+
+        if(response.ok){
+
+            window.location.replace(url);
+
+        }
+
+    }
     /**
      * Mark all notifications as read (frontend only).
      * Hides the badge and resets all unread indicators.
      */
-    function markAllNotificationsRead() {
-        // Remove all unread dots and backgrounds
-        document.querySelectorAll('#notificationDropdown [role="menuitem"]').forEach(function (item) {
-            item.classList.remove('bg-sihati-surface');
-            const dot = item.querySelector('span.rounded-full.bg-sihati-primary');
-            if (dot) dot.remove();
-        });
-        // Remove badge
-        const badge = document.getElementById('notificationBadge');
-        if (badge) badge.remove();
-        // Hide "Tandai dibaca" button
-        const markBtn = document.getElementById('markAllReadBtn');
-        if (markBtn) markBtn.remove();
-    }
+    async function markAllNotificationsRead() {
 
+        await fetch('/notifications/read-all',{
+
+            method:'POST',
+
+            headers:{
+                'X-CSRF-TOKEN':
+                    document.querySelector('meta[name="csrf-token"]').content,
+                'Accept':'application/json'
+            }
+
+        });
+
+        document.querySelectorAll(
+            '#notificationDropdown [role="menuitem"]'
+        ).forEach(function(item){
+
+            item.classList.remove('bg-sihati-surface');
+
+            const dot=item.querySelector(
+                'span.rounded-full.bg-sihati-primary'
+            );
+
+            if(dot) dot.remove();
+
+        });
+
+        document.getElementById('notificationBadge')?.remove();
+        document.getElementById('markAllReadBtn')?.remove();
+    }
     /**
      * Close dropdown when clicking outside.
      */

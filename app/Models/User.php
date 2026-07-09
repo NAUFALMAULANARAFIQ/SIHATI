@@ -12,25 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable([
-    'bidang_id',
-    'name',
-    'username',
-    'email',
-    'password',
-    'no_hp',
-    'role',
-    'is_active',
-])]
-#[Hidden([
-    'password',
-    'remember_token',
-])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $hidden = [
+    'password',
+    'remember_token',
+    ];
     protected $fillable = [
         'bidang_id', 'name', 'username', 'email', 'no_hp',
         'password', 'role', 'is_active',
@@ -40,7 +30,6 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
             'is_active' => 'boolean',
         ];
     }
@@ -79,4 +68,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class);
     }
+
+    public function AppNotifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }
+

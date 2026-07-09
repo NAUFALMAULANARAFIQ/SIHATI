@@ -57,7 +57,7 @@ class UserController extends Controller
             ],
             'email' => [
                 'required',
-                'email:rfc,dns',
+                'email',
                 'max:100',
                 Rule::unique('users', 'email'),
             ],
@@ -157,7 +157,7 @@ class UserController extends Controller
             ],
             'role' => [
                 'required',
-                Rule::in(['admin', 'petugas', 'pimpinan']),
+                Rule::in(['admin', 'pegawai',]),
             ],
             'bidang_id' => [
                 'nullable',

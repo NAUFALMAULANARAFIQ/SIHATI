@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Aduan;
 use App\Models\AduanStatusHistory;
 use App\Models\Status;
+use App\Models\User;
+use App\Services\NotificationService;
 
 class AduanStatusService
 {
@@ -16,6 +18,19 @@ class AduanStatusService
 
     public static function createInitialStatus(Aduan $aduan, int $changeBy): void
     {
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+
+            NotificationService::create(
+                userId: $admin->id,
+                type: 'new',
+                title: 'Aduan Baru Masuk',
+                description: "Aduan {$aduan->nomor_tiket} baru saja dibuat.",
+                url: route('admin.aduan.show', $aduan)
+            );
+
+        }
         $statusDiterima = Status::where('kode_status', 'diterima')->firstOrFail();
 
         $aduan->update([
@@ -71,6 +86,14 @@ class AduanStatusService
         }
 
         $aduan->update($updateData);
+
+        NotificationService::create(
+            userId: $aduan->pelapor_id,
+            type: 'status',
+            title: 'Status Aduan Diperbarui',
+            description: "Status aduan {$aduan->nomor_tiket} berubah menjadi {$statusBaru->nama_status}.",
+            url: route('pegawai.aduan.show', $aduan)
+        );
 
         AduanStatusHistory::create([
             'aduan_id' => $aduan->id,
