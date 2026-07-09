@@ -10,12 +10,6 @@
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6">
 
-                    @if (session('error'))
-                        <div class="mb-4 p-4 bg-red-100 text-red-800 rounded">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
                     @if ($errors->any())
                         <div class="mb-4 p-4 bg-red-100 text-red-800 rounded">
                             <ul class="list-disc list-inside">

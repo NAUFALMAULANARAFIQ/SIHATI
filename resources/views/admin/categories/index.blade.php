@@ -1,8 +1,8 @@
 <x-app-layout title="Data Kategori - SIHATI BPPKAD">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
     <div>
-        <h1 class="text-2xl font-semibold tracking-[-0.02em] text-sihati-ink">Data Kategori</h1>
-        <p class="mt-1 text-sm leading-6 text-sihati-slate">Kelola seluruh kategori aduan.</p>
+        <h1 class="text-xl md:text-2xl font-bold text-sihati-ink tracking-tight">Data Kategori</h1>
+        <p class="text-sihati-slate mt-1 text-sm">Kelola seluruh kategori aduan.</p>
     </div>
     <button type="button" onclick="tambahKategori()"
        class="inline-flex h-10 items-center gap-2 rounded-md bg-sihati-primary px-4 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed">
@@ -10,13 +10,6 @@
         Tambah Kategori
     </button>
 </div>
-
-@if (session('success'))
-    <div class="mb-4 rounded-md border border-sihati-success/30 bg-sihati-mint px-4 py-3 text-sm text-sihati-success">{{ session('success') }}</div>
-@endif
-@if (session('error'))
-    <div class="mb-4 rounded-md border border-sihati-error/30 bg-sihati-rose px-4 py-3 text-sm text-sihati-error">{{ session('error') }}</div>
-@endif
 
 <div class="overflow-hidden rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-subtle">
     <div class="overflow-x-auto">
@@ -51,9 +44,9 @@
                                 'deskripsi' => $category->deskripsi,
                                 'is_active' => $category->is_active,
                             ]) }}' class="rounded-md bg-sihati-yellow-bold px-3 py-1.5 text-xs font-medium text-sihati-charcoal transition hover:bg-sihati-yellow">Edit</button>
-                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Anda yakin ingin menghapus kategori ini?')">
+                            <form id="delete-form-{{ $category->id }}" action="{{ route('admin.categories.destroy', $category) }}" method="POST">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="rounded-md bg-sihati-rose px-3 py-1.5 text-xs font-medium text-sihati-error transition hover:bg-red-200">Hapus</button>
+                                <button type="button" onclick="confirmDelete('delete-form-{{ $category->id }}', 'kategori {{ $category->nama_kategori }}')" class="rounded-md bg-sihati-rose px-3 py-1.5 text-xs font-medium text-sihati-error transition hover:bg-red-200">Hapus</button>
                             </form>
                         </div>
                     </td>
@@ -147,6 +140,8 @@
         </form>
     </div>
 </div>
+
+@include('partials.delete-confirm-modal')
 
 @push('scripts')
 <script>

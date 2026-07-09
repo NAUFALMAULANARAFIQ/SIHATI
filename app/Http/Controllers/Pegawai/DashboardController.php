@@ -31,10 +31,11 @@ class DashboardController extends Controller
             ->count();
 
         $aduanTerbaru = Aduan::where('pelapor_id', $user->id)
+            ->whereDate('tanggal_aduan', now()->toDateString())
             ->with(['category', 'priority', 'status'])
             ->latest('tanggal_aduan')
-            ->take(5)
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
 
         $categories = Category::where('is_active', true)->get();
         $priorities = Priority::all();

@@ -1,8 +1,8 @@
 <x-app-layout title="Data Pengguna - SIHATI BPPKAD">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
     <div>
-        <h1 class="text-2xl font-semibold tracking-[-0.02em] text-sihati-ink">Data Pengguna</h1>
-        <p class="mt-1 text-sm leading-6 text-sihati-slate">Kelola seluruh pengguna sistem.</p>
+        <h1 class="text-xl md:text-2xl font-bold text-sihati-ink tracking-tight">Data Pengguna</h1>
+        <p class="text-sihati-slate mt-1 text-sm">Kelola seluruh pengguna sistem.</p>
     </div>
     <button type="button" onclick="tambahUser()"
        class="inline-flex h-10 items-center gap-2 rounded-md bg-sihati-primary px-4 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed">
@@ -10,13 +10,6 @@
         Tambah Pengguna
     </button>
 </div>
-
-@if (session('success'))
-    <div class="mb-4 rounded-md border border-sihati-success/30 bg-sihati-mint px-4 py-3 text-sm text-sihati-success">{{ session('success') }}</div>
-@endif
-@if (session('error'))
-    <div class="mb-4 rounded-md border border-sihati-error/30 bg-sihati-rose px-4 py-3 text-sm text-sihati-error">{{ session('error') }}</div>
-@endif
 
 <div class="overflow-hidden rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-subtle">
     <div class="overflow-x-auto">
@@ -77,9 +70,9 @@
                                 'is_active' => $user->is_active,
                             ]) }}' class="rounded-md bg-sihati-yellow-bold px-3 py-1.5 text-xs font-medium text-sihati-charcoal transition hover:bg-sihati-yellow">Edit</button>
                             @if (auth()->id() !== $user->id)
-                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Anda yakin ingin menonaktifkan pengguna ini?')">
+                            <form id="delete-form-{{ $user->id }}" action="{{ route('admin.users.destroy', $user) }}" method="POST">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="rounded-md bg-sihati-rose px-3 py-1.5 text-xs font-medium text-sihati-error transition hover:bg-red-200">Nonaktifkan</button>
+                                <button type="button" onclick="confirmDelete('delete-form-{{ $user->id }}', 'pengguna {{ $user->name }}')" class="rounded-md bg-sihati-rose px-3 py-1.5 text-xs font-medium text-sihati-error transition hover:bg-red-200">Nonaktifkan</button>
                             </form>
                             @endif
                         </div>
@@ -253,6 +246,8 @@
         </form>
     </div>
 </div>
+
+@include('partials.delete-confirm-modal')
 
 @push('scripts')
 <script>
