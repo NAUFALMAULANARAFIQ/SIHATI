@@ -4,7 +4,7 @@
         <h1 class="mt-1 text-2xl font-semibold tracking-[-0.02em] text-sihati-ink">Daftar Aduan</h1>
         <p class="mt-1 text-sm leading-6 text-sihati-slate">Kelola dan pantau seluruh aduan teknologi informasi.</p>
     </div>
-    <button onclick="openAduanModal()" class="inline-flex h-10 items-center gap-2 rounded-md bg-sihati-primary px-4 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed">
+    <button onclick="document.getElementById('createAduanModal-backdrop').classList.remove('hidden');document.body.style.overflow='hidden'" class="inline-flex h-10 items-center gap-2 rounded-md bg-sihati-primary px-4 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed">
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Buat Aduan
     </button>
@@ -121,7 +121,7 @@
         </div>
 
         <div class="flex items-center justify-end gap-3 border-t border-sihati-hairline pt-5">
-            <button type="button" onclick="closeAduanModal()" class="inline-flex h-10 items-center justify-center rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm font-medium text-sihati-ink transition hover:bg-sihati-surface">Batal</button>
+            <button type="button" onclick="document.getElementById('createAduanModal-backdrop').classList.add('hidden');document.body.style.overflow=''" class="inline-flex h-10 items-center justify-center rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm font-medium text-sihati-ink transition hover:bg-sihati-surface">Batal</button>
             <button type="submit" class="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-sihati-primary px-5 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed focus:outline-none focus:ring-2 focus:ring-sihati-primary focus:ring-offset-2">
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 Kirim Aduan
@@ -129,17 +129,4 @@
         </div>
     </form>
 </x-modal>
-
-@push('scripts')
-<script>
-    function openAduanModal() {
-        document.getElementById('createAduanModal-backdrop').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeAduanModal() {
-        document.getElementById('createAduanModal-backdrop').classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-</script>
-@endpush
 </x-app-layout>

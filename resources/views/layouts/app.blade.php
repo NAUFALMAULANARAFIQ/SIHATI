@@ -12,13 +12,13 @@
 <body class="m-0 min-h-dvh bg-sihati-surface text-sihati-ink font-notion antialiased">
     <div class="flex h-dvh overflow-hidden">
         <aside id="sidebar"
-            class="fixed inset-y-0 left-0 z-50 w-72 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-transform duration-300 lg:w-16 lg:translate-x-0 lg:transition-all"
+            class="fixed inset-y-0 left-0 z-[45] w-72 -translate-x-full overflow-hidden border-r border-white/10 bg-sihati-navy transition-transform duration-300 lg:w-16 lg:translate-x-0 lg:transition-all"
             style="box-shadow: 4px 0 12px rgba(0,0,0,0.15);">
             @include('partials.sidebar')
         </aside>
 
         <div id="sidebar-overlay"
-            class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden"
+            class="fixed inset-0 z-[44] hidden bg-black/50 lg:hidden"
             onclick="closeSidebar()">
         </div>
 
@@ -44,6 +44,11 @@
                 </div>
             </main>
         </div>
+
+        <div id="mobile-menu-overlay"
+            class="fixed inset-0 z-40 hidden bg-black/50 lg:hidden"
+            onclick="closeMobileMenu()">
+        </div>
     </div>
 
     <style>
@@ -61,7 +66,7 @@
 
         /* Mobile / tablet: sidebar overlay */
         body.sidebar-open #sidebar {
-            transform: translateX(0);
+            translate: 0 0 !important;
         }
 
         body.sidebar-open #sidebar-overlay {
@@ -82,7 +87,7 @@
         @media (min-width: 1024px) {
             #sidebar {
                 width: 64px;
-                transform: translateX(0);
+                translate: 0 0 !important;
             }
 
             body.sidebar-expanded #sidebar {
@@ -168,6 +173,11 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeSidebar();
+                const modalBackdrops = document.querySelectorAll('[id$="-backdrop"]:not(.hidden)');
+                modalBackdrops.forEach(backdrop => {
+                    backdrop.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
             }
         });
     </script>

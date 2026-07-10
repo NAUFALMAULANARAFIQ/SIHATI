@@ -1,8 +1,9 @@
-@php
+    @php
     $user = auth()->user();
     $isAdmin = $user?->role === 'admin';
     $userName = $user?->name ?? 'Pengguna';
     $initial = strtoupper(substr($userName, 0, 1));
+    $userDropdownId = 'userDropdown-' . uniqid();
 
     $routeName = request()->route()?->getName();
     $pageTitle = match(true) {
@@ -33,23 +34,24 @@
             </div>
         </div>
 
-        <div class="relative flex items-center gap-2">
-            <button onclick="toggleUserMenu(event)"
-                class="flex items-center gap-2 rounded-md p-1.5 transition hover:bg-sihati-surface">
-                <div class="hidden text-right sm:block">
-                    <p class="text-sm font-medium text-sihati-ink">{{ $userName }}</p>
-                    <p class="text-xs text-sihati-steel">{{ $isAdmin ? 'Admin' : 'Pegawai' }}</p>
-                </div>
-                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-sihati-lavender text-xs font-semibold text-sihati-primary-deep">
-                    {{ $initial }}
-                </div>
-                <svg class="hidden h-4 w-4 text-sihati-slate sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>
+            <div class="flex items-center gap-2">
+                <button id="userMenuButton" type="button"
+                    class="relative flex items-center gap-2 rounded-md p-1.5 transition hover:bg-sihati-surface">
+                    <div class="hidden text-right sm:block">
+                        <p class="text-sm font-medium text-sihati-ink">{{ $userName }}</p>
+                        <p class="text-xs text-sihati-steel">{{ $isAdmin ? 'Admin' : 'Pegawai' }}</p>
+                    </div>
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-sihati-lavender text-xs font-semibold text-sihati-primary-deep">
+                        {{ $initial }}
+                    </div>
+                    <svg class="hidden h-4 w-4 text-sihati-slate sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+            </div>
 
-            <div id="userDropdown" class="absolute right-0 top-full mt-2 hidden w-48 origin-top-right rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-modal">
-                <div class="border-b border-sihati-hairline-soft px-4 py-3">
+            <div id="userDropdown" class="absolute right-4 top-full mt-2 hidden w-48 origin-top-right rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-modal z-50">
+                <div class="border-b border-sihati-hairline-soft px-4 py-3 sm:hidden">
                     <p class="text-sm font-medium text-sihati-ink">{{ $userName }}</p>
                     <p class="text-xs text-sihati-steel">{{ $isAdmin ? 'Admin' : 'Pegawai' }}</p>
                 </div>
@@ -79,18 +81,23 @@
 
         @push('scripts')
         <script>
-            function toggleUserMenu(event) {
-                event.stopPropagation();
+            document.addEventListener('DOMContentLoaded', function() {
+                const button = document.getElementById('userMenuButton');
                 const dropdown = document.getElementById('userDropdown');
-                dropdown.classList.toggle('hidden');
-            }
-            document.addEventListener('click', function(e) {
-                const dropdown = document.getElementById('userDropdown');
-                if (!e.target.closest('[onclick*="toggleUserMenu"]') && !e.target.closest('#userDropdown')) {
-                    dropdown?.classList.add('hidden');
+                
+                if (button && dropdown) {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('hidden');
+                    });
+                    
+                    document.addEventListener('click', function(e) {
+                        if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+                            dropdown.classList.add('hidden');
+                        }
+                    });
                 }
             });
         </script>
         @endpush
-    </div>
 </header>
