@@ -19,24 +19,31 @@
         default => 'SIHATI BPPKAD'
     };
 @endphp
-
-<header class="sticky top-0 z-30 border-b border-sihati-hairline bg-sihati-canvas">
+<header class="sticky top-0 left-0 right-0 z-30 border-b border-sihati-hairline bg-sihati-canvas">
     <div class="flex h-16 items-center justify-between px-4 md:px-6">
-        <div class="flex items-center gap-3 md:gap-4">
+        <div class="flex items-center gap-3">
             <button onclick="toggleSidebar()"
-                class="flex h-9 w-9 items-center justify-center rounded-md text-sihati-slate hover:bg-sihati-surface">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="flex h-9 w-9 items-center justify-center rounded-md text-sihati-slate hover:bg-sihati-surface lg:hidden">
+                <svg class="sidebar-closed-icon h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
+                <svg class="sidebar-open-icon hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
             </button>
-            <div>
-                <h1 class="text-lg font-semibold text-sihati-ink">{{ $pageTitle }}</h1>
-            </div>
+            <a href="{{ $isAdmin ? route('admin.dashboard') : route('pegawai.dashboard') }}" class="flex items-center">
+                <img src="{{ asset('images/logo.png') }}" alt="SIHATI BPPKAD" class="h-8 w-auto">
+            </a>
         </div>
 
-            <div class="flex items-center gap-2">
-                <button id="userMenuButton" type="button"
-                    class="relative flex items-center gap-2 rounded-md p-1.5 transition hover:bg-sihati-surface">
+        <div class="flex items-center gap-1 sm:gap-2">
+            {{-- Notification dropdown --}}
+            @include('partials.notification-dropdown')
+
+            {{-- User menu --}}
+            <div class="relative">
+                <button onclick="toggleUserMenu(event)"
+                    class="flex items-center gap-2 rounded-md p-1.5 transition hover:bg-sihati-surface">
                     <div class="hidden text-right sm:block">
                         <p class="text-sm font-medium text-sihati-ink">{{ $userName }}</p>
                         <p class="text-xs text-sihati-steel">{{ $isAdmin ? 'Admin' : 'Pegawai' }}</p>
@@ -48,33 +55,60 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                     </svg>
                 </button>
-            </div>
 
-            <div id="userDropdown" class="absolute right-4 top-full mt-2 hidden w-48 origin-top-right rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-modal z-50">
-                <div class="border-b border-sihati-hairline-soft px-4 py-3 sm:hidden">
-                    <p class="text-sm font-medium text-sihati-ink">{{ $userName }}</p>
-                    <p class="text-xs text-sihati-steel">{{ $isAdmin ? 'Admin' : 'Pegawai' }}</p>
-                </div>
-                <div class="py-1">
-                    <a href="{{ route('profile.edit') }}"
-                        class="flex items-center gap-3 px-4 py-2 text-sm text-sihati-ink transition hover:bg-sihati-surface">
-                        <svg class="h-4 w-4 text-sihati-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                        Profil Saya
-                    </a>
-                </div>
-                <div class="border-t border-sihati-hairline-soft py-1">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="flex w-full items-center gap-3 px-4 py-2 text-sm text-sihati-error transition hover:bg-sihati-rose">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                                <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                <div id="userDropdown" class="absolute right-0 top-full mt-2 hidden w-48 origin-top-right rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-modal">
+                    <div class="border-b border-sihati-hairline-soft px-4 py-3">
+                        <p class="text-sm font-medium text-sihati-ink">{{ $userName }}</p>
+                        <p class="text-xs text-sihati-steel">{{ $isAdmin ? 'Admin' : 'Pegawai' }}</p>
+                    </div>
+                    <div class="py-1">
+                        <a href="{{ route('profile.edit') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm text-sihati-ink transition hover:bg-sihati-surface">
+                            <svg class="h-4 w-4 text-sihati-slate" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
-                            Keluar
-                        </button>
-                    </form>
+                            Profil Saya
+                        </a>
+                    </div>
+                    <div class="border-t border-sihati-hairline-soft py-1">
+                        <form id="logoutForm" method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="button" onclick="confirmLogout()"
+                                class="flex w-full items-center gap-3 px-4 py-2 text-sm text-sihati-error transition hover:bg-sihati-rose">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                </svg>
+                                Keluar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Logout Confirmation Modal --}}
+        <div id="logoutConfirmModal"
+            class="fixed inset-0 z-[90] hidden items-center justify-center bg-black/40 p-4"
+            onclick="if(event.target===this)closeLogoutModal()">
+            <div class="w-full max-w-sm animate-scale-in rounded-xl bg-sihati-canvas p-6 shadow-modal">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-sihati-rose">
+                        <svg class="h-5 w-5 text-sihati-error" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-sihati-ink">Konfirmasi Logout</h3>
+                </div>
+                <p class="mt-3 text-sm leading-relaxed text-sihati-slate">Apakah Anda yakin ingin keluar dari akun ini?</p>
+                <div class="mt-6 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeLogoutModal()"
+                        class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink transition hover:bg-sihati-surface">
+                        Batal
+                    </button>
+                    <button type="button" onclick="submitLogout()"
+                        class="rounded-md bg-sihati-error px-5 py-2 text-sm font-medium text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-sihati-error focus:ring-offset-2">
+                        Logout
+                    </button>
                 </div>
             </div>
         </div>
@@ -84,18 +118,45 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const button = document.getElementById('userMenuButton');
                 const dropdown = document.getElementById('userDropdown');
-                
-                if (button && dropdown) {
-                    button.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        dropdown.classList.toggle('hidden');
-                    });
-                    
-                    document.addEventListener('click', function(e) {
-                        if (!button.contains(e.target) && !dropdown.contains(e.target)) {
-                            dropdown.classList.add('hidden');
-                        }
-                    });
+                dropdown.classList.toggle('hidden');
+                // Close notification dropdown if open
+                const notifDropdown = document.getElementById('notificationDropdown');
+                if (notifDropdown && !notifDropdown.classList.contains('hidden')) {
+                    notifDropdown.classList.add('hidden');
+                    document.getElementById('notificationBell')?.setAttribute('aria-expanded', 'false');
+                }
+            }),
+            document.addEventListener('click', function(e) {
+                const dropdown = document.getElementById('userDropdown');
+                if (!e.target.closest('[onclick*="toggleUserMenu"]') && !e.target.closest('#userDropdown')) {
+                    dropdown?.classList.add('hidden');
+                }
+            });
+
+            /* ── Logout confirmation modal ── */
+            window.confirmLogout = function() {
+                var modal = document.getElementById('logoutConfirmModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+
+            window.closeLogoutModal = function() {
+                var modal = document.getElementById('logoutConfirmModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+
+            window.submitLogout = function() {
+                closeLogoutModal();
+                document.getElementById('logoutForm').submit();
+            };
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    var modal = document.getElementById('logoutConfirmModal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        closeLogoutModal();
+                    }
                 }
             });
         </script>

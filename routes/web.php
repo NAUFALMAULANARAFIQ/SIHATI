@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BidangController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -16,10 +17,12 @@ use App\Http\Controllers\Admin\AduanNoteController;
 use App\Http\Controllers\Admin\AduanAttachmentController;
 use App\Http\Controllers\Admin\AduanCommentController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Pegawai\DashboardController as PegawaiDashboardController;
 use App\Http\Controllers\Pegawai\AduanController as PegawaiAduanController;
 use App\Http\Controllers\Pegawai\CommentController as PegawaiCommentController;
 use App\Http\Controllers\Pegawai\RatingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,12 +63,36 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
     Route::get('/laporan/export', [LaporanController::class, 'export'])->name('laporan.export');
+
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/notifications',
+        [NotificationController::class,'index']
+    )->name('notifications.index');
+
+    Route::post(
+        '/notifications/{notification}/read',
+        [NotificationController::class,'markRead']
+    )->name('notifications.read');
+
+    Route::post(
+        '/notifications/read-all',
+        [NotificationController::class,'markAllRead']
+    )->name('notifications.mark-all-read');
+
+    Route::delete(
+    '/notifications',
+    [NotificationController::class, 'destroyAll']
+    )->name('notifications.destroy-all');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -78,5 +105,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('activity-logs', [ActivityLogController::class, 'index'])
         ->name('activity-logs.index');
 });
+
+
 
 require __DIR__.'/auth.php';

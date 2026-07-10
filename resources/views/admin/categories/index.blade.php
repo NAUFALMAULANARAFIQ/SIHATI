@@ -1,8 +1,8 @@
 <x-app-layout title="Data Kategori - SIHATI BPPKAD">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
     <div>
-        <h1 class="text-2xl font-semibold tracking-[-0.02em] text-sihati-ink">Data Kategori</h1>
-        <p class="mt-1 text-sm leading-6 text-sihati-slate">Kelola seluruh kategori aduan.</p>
+        <h1 class="text-xl md:text-2xl font-bold text-sihati-ink tracking-tight">Data Kategori</h1>
+        <p class="text-sihati-slate mt-1 text-sm">Kelola seluruh kategori aduan.</p>
     </div>
     <button type="button" onclick="tambahKategori()"
        class="inline-flex h-10 items-center gap-2 rounded-md bg-sihati-primary px-4 text-sm font-medium text-white transition hover:bg-sihati-primary-pressed">
@@ -11,61 +11,54 @@
     </button>
 </div>
 
-@if (session('success'))
-    <div class="mb-4 rounded-md border border-sihati-success/30 bg-sihati-mint px-4 py-3 text-sm text-sihati-success">{{ session('success') }}</div>
-@endif
-@if (session('error'))
-    <div class="mb-4 rounded-md border border-sihati-error/30 bg-sihati-rose px-4 py-3 text-sm text-sihati-error">{{ session('error') }}</div>
-@endif
-
 <div class="overflow-hidden rounded-lg border border-sihati-hairline bg-sihati-canvas shadow-subtle">
-    <div class="p-4 md:p-6">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr class="bg-gray-100 text-left">
-                    <th class="border px-3 py-2">No</th>
-                    <th class="border px-3 py-2">Nama Kategori</th>
-                    <th class="border px-3 py-2">Deskripsi</th>
-                    <th class="border px-3 py-2">Status</th>
-                    <th class="border px-3 py-2">Aksi</th>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-sihati-hairline-soft">
+            <thead class="bg-sihati-surface">
+                <tr>
+                    <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">No</th>
+                    <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Nama Kategori</th>
+                    <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Deskripsi</th>
+                    <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Status</th>
+                    <th class="whitespace-nowrap px-4 py-3.5 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-sihati-hairline-soft bg-sihati-canvas">
                 @forelse ($categories as $category)
-                <tr>
-                    <td class="border px-3 py-2">{{ $categories->firstItem() + $loop->index }}</td>
-                    <td class="border px-3 py-2">{{ $category->nama_kategori }}</td>
-                    <td class="border px-3 py-2">{{ $category->deskripsi ?? '-' }}</td>
-                    <td class="border px-3 py-2">@if($category->is_active)<span class="px-2 py-1 text-sm bg-green-100 text-green-700 rounded">Aktif</span>@else<span class="px-2 py-1 text-sm bg-red-100 text-red-700 rounded">Nonaktif</span>@endif</td>
-                    <td class="border px-3 py-2">
-                        <div class="flex gap-2">
+                <tr class="transition hover:bg-sihati-surface-soft">
+                    <td class="whitespace-nowrap px-4 py-3.5 text-sm text-sihati-slate">{{ $categories->firstItem() + $loop->index }}</td>
+                    <td class="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-sihati-charcoal">{{ $category->nama_kategori }}</td>
+                    <td class="whitespace-nowrap px-4 py-3.5 text-sm text-sihati-slate">{{ $category->deskripsi ?? '-' }}</td>
+                    <td class="whitespace-nowrap px-4 py-3.5">@if($category->is_active)<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-sihati-mint text-sihati-success">Aktif</span>@else<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-sihati-rose text-sihati-error">Nonaktif</span>@endif</td>
+                    <td class="whitespace-nowrap px-4 py-3.5 text-right">
+                        <div class="flex items-center justify-end gap-2">
                             <button type="button" onclick="showKategoriDetail(this)" data-kategori='{{ json_encode([
                                 'nama_kategori' => $category->nama_kategori,
                                 'deskripsi' => $category->deskripsi,
                                 'is_active' => $category->is_active,
                                 'created_at' => $category->created_at?->format('d-m-Y H:i'),
-                            ]) }}' class="px-3 py-1 bg-gray-600 text-white rounded text-sm">Detail</button>
+                            ]) }}' class="rounded-md bg-sihati-primary px-3 py-1.5 text-xs font-medium text-sihati-on-primary transition hover:bg-sihati-primary-pressed">Detail</button>
                             <button type="button" onclick="editKategori(this)" data-kategori='{{ json_encode([
                                 'id' => $category->id,
                                 'nama_kategori' => $category->nama_kategori,
                                 'deskripsi' => $category->deskripsi,
                                 'is_active' => $category->is_active,
-                            ]) }}' class="px-3 py-1 bg-yellow-500 text-white rounded text-sm">Edit</button>
-                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus/nonaktifkan kategori ini?')">
+                            ]) }}' class="rounded-md bg-sihati-yellow-bold px-3 py-1.5 text-xs font-medium text-sihati-charcoal transition hover:bg-sihati-yellow">Edit</button>
+                            <form id="delete-form-{{ $category->id }}" action="{{ route('admin.categories.destroy', $category) }}" method="POST">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded text-sm">Hapus</button>
+                                <button type="button" onclick="confirmDelete('delete-form-{{ $category->id }}', 'kategori {{ $category->nama_kategori }}')" class="rounded-md bg-sihati-rose px-3 py-1.5 text-xs font-medium text-sihati-error transition hover:bg-red-200">Hapus</button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="5" class="border px-3 py-4 text-center text-gray-500">Belum ada data kategori.</td></tr>
+                <tr><td colspan="5" class="px-4 py-10 text-center text-sm text-sihati-slate">Belum ada data kategori.</td></tr>
                 @endforelse
             </tbody>
         </table>
-        <div class="mt-4">{{ $categories->links() }}</div>
     </div>
 </div>
+<div class="mt-6">{{ $categories->links() }}</div>
 
 <div id="detailKategoriModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
     <div class="w-full max-w-lg rounded-xl bg-white p-6 shadow-modal animate-slide-up">
@@ -82,69 +75,73 @@
     </div>
 </div>
 
-<div id="editKategoriModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
-    <div class="w-full max-w-lg rounded-xl bg-white p-6 shadow-modal">
-        <div class="flex items-center justify-between border-b border-gray-200 pb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Edit Kategori</h2>
-            <button type="button" onclick="closeModal('editKategoriModal')" class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+<div id="editKategoriModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 overflow-y-auto">
+    <div class="w-full max-w-lg rounded-xl bg-sihati-canvas p-6 shadow-modal animate-slide-up my-4 md:my-8">
+        <div class="flex items-center justify-between border-b border-sihati-hairline pb-4">
+            <h2 class="text-lg font-semibold text-sihati-ink">Edit Kategori</h2>
+            <button type="button" onclick="closeModal('editKategoriModal')" class="rounded-md p-1.5 text-sihati-stone hover:bg-sihati-surface">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <form id="editKategoriForm" method="POST" class="space-y-4 pt-5">
+        <form id="editKategoriForm" method="POST" class="space-y-4 pt-6">
             @csrf @method('PUT')
             <div>
-                <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
+                <label for="ek-nama" class="block text-sm font-medium text-sihati-charcoal">Nama Kategori</label>
                 <input type="text" name="nama_kategori" id="ek-nama" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
+                <label for="ek-deskripsi" class="block text-sm font-medium text-sihati-charcoal">Deskripsi</label>
                 <textarea name="deskripsi" id="ek-deskripsi" rows="4"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20"></textarea>
             </div>
-            <div class="flex items-center gap-2">
-                <input type="checkbox" name="is_active" id="ek-is_active" value="1" class="rounded border-gray-300">
-                <label class="text-sm text-gray-700">Kategori aktif</label>
+            <div class="flex items-center gap-2 pt-1">
+                <input type="checkbox" name="is_active" id="ek-is_active" value="1"
+                    class="h-4 w-4 rounded border-sihati-hairline-strong text-sihati-primary focus:ring-sihati-primary/20">
+                <label for="ek-is_active" class="text-sm text-sihati-charcoal">Kategori aktif</label>
             </div>
-            <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
-                <button type="button" onclick="closeModal('editKategoriModal')" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Batal</button>
-                <button type="submit" class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">Simpan</button>
+            <div class="flex items-center justify-end gap-3 border-t border-sihati-hairline pt-4">
+                <button type="button" onclick="closeModal('editKategoriModal')" class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>
+                <button type="submit" class="rounded-md bg-sihati-primary px-4 py-2 text-sm font-medium text-sihati-on-primary hover:bg-sihati-primary-pressed focus:outline-none focus:ring-2 focus:ring-sihati-primary focus:ring-offset-2">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
-<div id="tambahKategoriModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4">
-    <div class="w-full max-w-lg rounded-xl bg-white p-6 shadow-modal">
-        <div class="flex items-center justify-between border-b border-gray-200 pb-4">
-            <h2 class="text-lg font-semibold text-gray-900">Tambah Kategori</h2>
-            <button type="button" onclick="closeModal('tambahKategoriModal')" class="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+<div id="tambahKategoriModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4 overflow-y-auto">
+    <div class="w-full max-w-lg rounded-xl bg-sihati-canvas p-6 shadow-modal animate-slide-up my-4 md:my-8">
+        <div class="flex items-center justify-between border-b border-sihati-hairline pb-4">
+            <h2 class="text-lg font-semibold text-sihati-ink">Tambah Kategori</h2>
+            <button type="button" onclick="closeModal('tambahKategoriModal')" class="rounded-md p-1.5 text-sihati-stone hover:bg-sihati-surface">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <form method="POST" action="{{ route('admin.categories.store') }}" class="space-y-4 pt-5">
+        <form method="POST" action="{{ route('admin.categories.store') }}" class="space-y-4 pt-6">
             @csrf
             <div>
-                <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
-                <input type="text" name="nama_kategori" value="{{ old('nama_kategori') }}" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tk-nama" class="block text-sm font-medium text-sihati-charcoal">Nama Kategori</label>
+                <input type="text" name="nama_kategori" id="tk-nama" value="{{ old('nama_kategori') }}" required
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                <textarea name="deskripsi" rows="4"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">{{ old('deskripsi') }}</textarea>
+                <label for="tk-deskripsi" class="block text-sm font-medium text-sihati-charcoal">Deskripsi</label>
+                <textarea name="deskripsi" id="tk-deskripsi" rows="4"
+                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">{{ old('deskripsi') }}</textarea>
             </div>
-            <div class="flex items-center gap-2">
-                <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300">
-                <label class="text-sm text-gray-700">Kategori aktif</label>
+            <div class="flex items-center gap-2 pt-1">
+                <input type="checkbox" name="is_active" value="1" checked
+                    class="h-4 w-4 rounded border-sihati-hairline-strong text-sihati-primary focus:ring-sihati-primary/20">
+                <label class="text-sm text-sihati-charcoal">Kategori aktif</label>
             </div>
-            <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
-                <button type="button" onclick="closeModal('tambahKategoriModal')" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Batal</button>
-                <button type="submit" class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">Simpan</button>
+            <div class="flex items-center justify-end gap-3 border-t border-sihati-hairline pt-4">
+                <button type="button" onclick="closeModal('tambahKategoriModal')" class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>
+                <button type="submit" class="rounded-md bg-sihati-primary px-4 py-2 text-sm font-medium text-sihati-on-primary hover:bg-sihati-primary-pressed focus:outline-none focus:ring-2 focus:ring-sihati-primary focus:ring-offset-2">Simpan</button>
             </div>
         </form>
     </div>
 </div>
+
+@include('partials.delete-confirm-modal')
 
 @push('scripts')
 <script>

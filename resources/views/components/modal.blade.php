@@ -21,10 +21,13 @@
         : 'relative bg-white rounded-xl shadow-xl w-full animate-slide-in';
 @endphp
 
-<div id="{{ $id }}-backdrop" class="fixed inset-0 z-[60] hidden bg-black/50"
-     onclick="this.classList.add('hidden');document.body.style.overflow=''">
-    <div class="flex items-center justify-center min-h-full p-4">
-        <div id="{{ $id }}" class="{{ $modalClasses }} {{ $sizeClasses }}" onclick="event.stopPropagation()">
+<!-- Modal Backdrop -->
+<div id="{{ $id }}" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="modal-backdrop absolute inset-0" onclick="closeModal('{{ $id }}')"></div>
+    
+    <!-- Modal Content -->
+    <div class="{{ $modalClasses }} {{ $sizeClasses }}" onclick="event.stopPropagation()">
+            <!-- Modal Header -->
             @if($title || $showClose)
             <div class="flex items-center justify-between px-6 py-4 border-b border-hairline {{ $scrollable ? 'flex-shrink-0' : '' }}">
                 @if($title)
@@ -50,6 +53,33 @@
                 {{ $footer }}
             </div>
             @endif
-        </div>
     </div>
 </div>
+
+<script>
+    function openModal(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modals = document.querySelectorAll('[id$="Modal"]:not(.hidden), [id$="-backdrop"]:not(.hidden)');
+            modals.forEach(modal => {
+                closeModal(modal.id);
+            });
+        }
+    });
+</script>

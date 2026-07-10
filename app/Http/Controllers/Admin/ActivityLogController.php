@@ -45,7 +45,7 @@ class ActivityLogController extends Controller
         $sort = $request->sort === 'asc' ? 'asc' : 'desc';
         $query->orderBy('created_at', $sort);
 
-        $logs = $query->paginate(20)->withQueryString();
+        $logs = $query->paginate(10)->withQueryString();
 
         $modules = ActivityLog::select('module')->distinct()->pluck('module');
         $actions = ActivityLog::select('action')->distinct()->pluck('action');

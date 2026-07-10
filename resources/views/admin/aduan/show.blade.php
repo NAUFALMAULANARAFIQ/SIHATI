@@ -56,15 +56,33 @@
             @if($aduan->attachments && $aduan->attachments->isNotEmpty())
             <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 @foreach ($aduan->attachments as $att)
-                <a href="{{ asset('storage/' . $att->file_path) }}" target="_blank" class="flex items-center gap-2 rounded-md border border-sihati-hairline-soft p-3 text-sm transition hover:bg-sihati-surface-soft">
-                    <svg class="h-5 w-5 flex-shrink-0 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
-                    <span class="truncate">{{ $att->file_name }}</span>
-                </a>
+                @php
+                    $fileUrl = asset('storage/' . $att->file_path);
+                    $isImage = $att->file_type
+                        ? str_starts_with($att->file_type, 'image/')
+                        : (bool) preg_match('/\.(jpg|jpeg|png|webp)$/i', $att->file_name);
+                    $isPdf = $att->file_type === 'application/pdf' || preg_match('/\.pdf$/i', $att->file_name);
+                    $canPreview = $isImage || $isPdf;
+                @endphp
+                <div class="flex items-center gap-2 rounded-md border border-sihati-hairline-soft p-3 text-sm transition hover:bg-sihati-surface-soft">
+                    <a href="{{ $fileUrl }}" target="_blank" class="flex min-w-0 flex-1 items-center gap-2 no-underline text-sihati-ink">
+                        <svg class="h-5 w-5 flex-shrink-0 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                        <span class="truncate">{{ $att->file_name }}</span>
+                    </a>
+                    @if($canPreview)
+                    <button type="button"
+                        onclick="openAttachmentPreview('{{ $fileUrl }}', '{{ $att->file_name }}', '{{ $isImage ? 'image' : 'pdf' }}')"
+                        class="rounded px-2 py-0.5 text-xs font-medium text-sihati-link transition hover:bg-sihati-surface">
+                        Lihat
+                    </button>
+                    @endif
+                </div>
                 @endforeach
             </div>
             @else
             <p class="mt-3 text-sm text-sihati-slate">Belum ada lampiran.</p>
             @endif
+
         </div>
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
@@ -180,6 +198,8 @@
         </form>
     </div>
 </div>
+
+@include('partials.attachment-preview-popup')
 
 @push('scripts')
 <script>
