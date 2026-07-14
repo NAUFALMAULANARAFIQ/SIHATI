@@ -280,7 +280,6 @@
             var list = await res.json();
             var unread = list.filter(function(n) { return !n.is_read; }).length;
 
-            // Update badge
             var badge = document.getElementById('notificationBadge');
             var bell = document.getElementById('notificationBell');
             if (unread > 0) {
@@ -297,7 +296,6 @@
                 if (badge) badge.remove();
             }
 
-            // Rebuild notification list
             var container = document.getElementById('notificationList');
             var emptyHtml =
                 '<div class="flex flex-col items-center justify-center px-6 py-12 text-center">' +
@@ -346,7 +344,6 @@
 
             container.innerHTML = html;
 
-            // Update mark all read button
             var markAllBtn = document.getElementById('markAllReadBtn');
             if (unread > 0) {
                 if (!markAllBtn) {
@@ -374,5 +371,6 @@
     }
 
     setInterval(pollNotifications, 10000);
+
 </script>
 @endpush

@@ -161,6 +161,8 @@ class AduanService
             'komentar' => $komentar,
         ]);
 
+        self::notifyNewComment($aduan, $userId);
+
         ActivityLogService::log(
             action: 'add_comment',
             module: 'aduan',
@@ -172,7 +174,6 @@ class AduanService
 
         return $comment->fresh(['user']);
     }
-
     public static function addNote(Aduan $aduan, string $catatan, int $petugasId): AduanNote
     {
         $note = AduanNote::create([
@@ -224,5 +225,32 @@ class AduanService
         );
 
         return $ratingRecord->fresh(['user']);
+    }
+
+    private static function notifyNewComment(Aduan $aduan, int $commenterId): void
+    {
+        if ($commenterId === $aduan->pelapor_id) {
+            $admins = $aduan->petugas_id
+                ? User::where('id', $aduan->petugas_id)->get()
+                : User::where('role', 'admin')->get();
+
+            foreach ($admins as $admin) {
+                NotificationService::create(
+                    userId: $admin->id,
+                    type: 'comment',
+                    title: 'Komentar Baru pada Aduan',
+                    description: "Ada komentar baru pada aduan {$aduan->nomor_tiket}.",
+                    url: route('admin.aduan.show', $aduan)
+                );
+            }
+        } else {
+            NotificationService::create(
+                userId: $aduan->pelapor_id,
+                type: 'comment',
+                title: 'Komentar Baru pada Aduan',
+                description: "Ada komentar baru pada aduan {$aduan->nomor_tiket} Anda.",
+                url: route('pegawai.aduan.show', $aduan)
+            );
+        }
     }
 }

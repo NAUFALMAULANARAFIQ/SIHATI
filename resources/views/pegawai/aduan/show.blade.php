@@ -66,7 +66,7 @@
                     $fileUrl = asset('storage/' . $att->file_path);
                     $isImage = $att->file_type
                         ? str_starts_with($att->file_type, 'image/')
-                        : (bool) preg_match('/\.(jpg|jpeg|png|webp)$/i', $att->file_name);
+                        : (bool) preg_match('/\.(jpg|jpeg|png)$/i', $att->file_name);
                     $isPdf = $att->file_type === 'application/pdf' || preg_match('/\.pdf$/i', $att->file_name);
                     $canPreview = $isImage || $isPdf;
                 @endphp
