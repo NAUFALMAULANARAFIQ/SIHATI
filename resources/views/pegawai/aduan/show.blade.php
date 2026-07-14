@@ -4,7 +4,7 @@
 @endphp
 
 <x-app-layout :title="$aduan->nomor_tiket . ' - SIHATI BPPKAD'">
-<nav class="mb-4 text-sm text-sihati-steel">
+<nav class="mb-4 pt-5 font-semibold text-sm text-sihati-steel">
     <a href="{{ route('pegawai.aduan.index') }}" class="hover:text-sihati-link">Aduan</a>
     <span class="mx-2">/</span>
     <span class="text-sihati-charcoal">{{ $aduan->nomor_tiket }}</span>
@@ -18,7 +18,7 @@
                 @php
                     $s = $aduan->status?->nama_status ?? $aduan->status?->kode_status ?? 'diterima'; $sKey = strtolower($s);
                     $sC = match($sKey) { 'diterima' => 'bg-sihati-lavender text-sihati-primary-deep', 'diproses' => 'bg-sihati-sky text-sihati-link-pressed', 'selesai' => 'bg-sihati-mint text-sihati-success', default => 'bg-sihati-gray text-sihati-slate' };
-                    $p = $aduan->priority?->nama_prioritas ?? 'Rendah';
+                    $p = $aduan->priority?->nama_prioritas ?? '-';
                     $pC = match(strtolower($p)) { 'rendah' => 'bg-sihati-gray text-sihati-slate', 'sedang' => 'bg-sihati-sky text-sihati-link-pressed', 'tinggi' => 'bg-sihati-yellow-bold text-sihati-charcoal', 'mendesak' => 'bg-sihati-rose text-sihati-error', default => 'bg-sihati-gray text-sihati-slate' };
                 @endphp
                 <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
@@ -157,7 +157,7 @@
         <form method="POST" action="{{ route('pegawai.aduan.ratings.store', $aduan) }}" class="mt-5 space-y-4">
             @csrf
             <div>
-                <label class="block text-sm font-medium text-sihati-charcoal">Rating</label>
+                <span class="block text-sm font-medium text-sihati-charcoal">Rating</span>
                 <div class="mt-2 flex items-center gap-1" id="starRating">
                     @for ($i = 1; $i <= 5; $i++)
                     <button type="button" data-value="{{ $i }}" class="star-btn h-8 w-8 text-sihati-hairline-strong transition-colors duration-150">
@@ -170,8 +170,8 @@
                 </div>
             </div>
             <div>
-                <label for="komentar" class="block text-sm font-medium text-sihati-charcoal">Komentar (opsional)</label>
-                <textarea id="komentar" name="komentar" rows="3" placeholder="Tulis kesan Anda terhadap penanganan aduan..." class="mt-1.5 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20"></textarea>
+                <label for="rating-komentar" class="block text-sm font-medium text-sihati-charcoal">Komentar (opsional)</label>
+                <textarea id="rating-komentar" name="komentar" rows="3" placeholder="Tulis kesan Anda terhadap penanganan aduan..." class="mt-1.5 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20"></textarea>
             </div>
             <div class="flex justify-end gap-3">
                 <button type="button" onclick="closeModal('ratingModal')" class="rounded-md border border-sihati-hairline-strong px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>

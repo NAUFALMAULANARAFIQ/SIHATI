@@ -69,7 +69,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::patch('/profile/deactivate', [ProfileController::class, 'deactivate'])->name('profile.deactivate');
 });
 
 Route::middleware('auth')->group(function () {
@@ -78,6 +78,16 @@ Route::middleware('auth')->group(function () {
         '/notifications',
         [NotificationController::class,'index']
     )->name('notifications.index');
+
+    Route::get(
+        '/notifications/unread-count',
+        [NotificationController::class,'unreadCount']
+    )->name('notifications.unread-count');
+
+    Route::get(
+        '/notifications/all',
+        [NotificationController::class,'showAll']
+    )->name('notifications.all');
 
     Route::post(
         '/notifications/{notification}/read',
@@ -97,6 +107,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
+    Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
     Route::resource('bidangs', BidangController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('priorities', PriorityController::class);

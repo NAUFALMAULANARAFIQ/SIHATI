@@ -105,7 +105,7 @@
 
             {{-- Lampiran (Dropzone) --}}
             <div>
-                <label class="block text-sm font-medium text-sihati-charcoal">Lampiran (opsional)</label>
+                <span class="block text-sm font-medium text-sihati-charcoal">Lampiran (opsional)</span>
                 <label for="attachments"
                     class="mt-1.5 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-sihati-hairline-strong bg-sihati-surface-soft p-5 transition hover:border-sihati-primary hover:bg-sihati-lavender/20">
                     <svg class="mb-2 h-8 w-8 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">

@@ -66,7 +66,7 @@
         </div>
 
         {{-- ── Notification List ── --}}
-        <div class="max-h-[70vh] overflow-y-auto overscroll-contain sm:max-h-[28rem]">
+        <div id="notificationList" class="max-h-[70vh] overflow-y-auto overscroll-contain sm:max-h-[28rem]">
             @forelse($notifications as $notif)
                 @php
                     $icon = $iconMap[$notif['type']] ?? $iconMap['new'];
@@ -78,33 +78,23 @@
                         {{ $isUnread ? 'bg-sihati-surface' : 'hover:bg-sihati-surface/50' }}
                         hover:bg-sihati-surface"
                     onclick="markNotificationRead(this, {{ $notif->id }}, '{{ $notif->url }}'); return false;">
-                    {{-- Icon --}}
                     <span class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full {{ $icon['bg'] }} {{ $icon['color'] }}">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                             <path d="{{ $icon['path'] }}"/>
                         </svg>
                     </span>
-
-                    {{-- Content --}}
                     <div class="min-w-0 flex-1">
                         <div class="flex items-start justify-between gap-2">
-                            <p class="text-sm font-medium text-sihati-ink {{ $isUnread ? '' : '' }}">
-                                {{ $notif->title }}
-                            </p>
+                            <p class="text-sm font-medium text-sihati-ink">{{ $notif->title }}</p>
                             @if($isUnread)
                                 <span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-sihati-primary" aria-label="Belum dibaca"></span>
                             @endif
                         </div>
-                        <p class="mt-0.5 text-xs text-sihati-slate line-clamp-2 leading-relaxed">
-                            {{ $notif->description }}
-                        </p>
-                        <p class="mt-1 text-[11px] text-sihati-steel">
-                            {{ $notif->created_at->diffForHumans() }}
-                        </p>
+                        <p class="mt-0.5 text-xs text-sihati-slate line-clamp-2 leading-relaxed">{{ $notif->description }}</p>
+                        <p class="mt-1 text-[11px] text-sihati-steel">{{ $notif->created_at->diffForHumans() }}</p>
                     </div>
                 </a>
             @empty
-                {{-- ── Empty State ── --}}
                 <div class="flex flex-col items-center justify-center px-6 py-12 text-center">
                     <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sihati-gray">
                         <svg class="h-6 w-6 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
@@ -122,9 +112,8 @@
         {{-- ── Footer ── --}}
         @if(count($notifications) > 0)
             <div class="border-t border-sihati-hairline px-4 py-2.5">
-                <a href="#"
-                    class="block text-center text-sm font-medium text-sihati-link transition hover:text-sihati-link-pressed"
-                    onclick="event.preventDefault(); closeNotificationDropdown();">
+                <a href="{{ route('notifications.all') }}"
+                    class="block text-center text-sm font-medium text-sihati-link transition hover:text-sihati-link-pressed">
                     Lihat semua notifikasi
                 </a>
             </div>
@@ -259,5 +248,131 @@
             }
         }
     });
+
+    /**
+     * ─── Icon map (sama dengan PHP $iconMap) ───
+     */
+    var iconMap = {
+        'new':       { bg: 'bg-sihati-sky',       color: 'text-blue',       path: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+        'priority':  { bg: 'bg-sihati-peach',     color: 'text-sihati-orange', path: 'M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z' },
+        'comment':   { bg: 'bg-sihati-lavender',  color: 'text-sihati-primary', path: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' },
+        'status':    { bg: 'bg-sihati-sky',       color: 'text-blue',       path: 'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182' },
+        'completed': { bg: 'bg-sihati-mint',      color: 'text-sihati-success', path: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    };
+
+    function timeAgo(dateStr) {
+        var diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+        if (diff < 60) return 'baru saja';
+        if (diff < 3600) return Math.floor(diff / 60) + ' menit lalu';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' jam lalu';
+        return Math.floor(diff / 86400) + ' hari lalu';
+    }
+
+    /**
+     * ─── Polling: update notifikasi setiap 15 detik ───
+     */
+    async function pollNotifications() {
+        try {
+            var res = await fetch('/notifications', {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) return;
+            var list = await res.json();
+            var unread = list.filter(function(n) { return !n.is_read; }).length;
+
+            // Update badge
+            var badge = document.getElementById('notificationBadge');
+            var bell = document.getElementById('notificationBell');
+            if (unread > 0) {
+                if (badge) {
+                    badge.textContent = unread > 9 ? '9+' : unread;
+                } else {
+                    var span = document.createElement('span');
+                    span.id = 'notificationBadge';
+                    span.className = 'absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-sihati-error px-1 text-[10px] font-bold leading-none text-white shadow-sm';
+                    span.textContent = unread > 9 ? '9+' : unread;
+                    bell?.appendChild(span);
+                }
+            } else {
+                if (badge) badge.remove();
+            }
+
+            // Rebuild notification list
+            var container = document.getElementById('notificationList');
+            var emptyHtml =
+                '<div class="flex flex-col items-center justify-center px-6 py-12 text-center">' +
+                    '<div class="flex h-12 w-12 items-center justify-center rounded-full bg-sihati-gray">' +
+                        '<svg class="h-6 w-6 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>' +
+                    '</div>' +
+                    '<p class="mt-3 text-sm font-medium text-sihati-ink">Belum ada notifikasi</p>' +
+                    '<p class="mt-1 text-xs text-sihati-steel">Tidak ada notifikasi baru.</p>' +
+                '</div>';
+
+            if (!container) return;
+
+            if (list.length === 0) {
+                container.innerHTML = emptyHtml;
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < list.length; i++) {
+                var n = list[i];
+                var icon = iconMap[n.type] || iconMap['new'];
+                var isUnread = !n.is_read;
+                var createdAt = n.created_at ? timeAgo(n.created_at) : '';
+
+                html +=
+                    '<a href="' + n.url + '" role="menuitem"' +
+                    ' class="group flex items-start gap-3 px-4 py-3 text-left transition ' +
+                    (isUnread ? 'bg-sihati-surface ' : '') +
+                    'hover:bg-sihati-surface"' +
+                    ' onclick="markNotificationRead(this, ' + n.id + ', \'' + n.url.replace(/'/g, "\\'") + '\'); return false;">' +
+                        '<span class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ' + icon.bg + ' ' + icon.color + '">' +
+                            '<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">' +
+                                '<path d="' + icon.path + '"/>' +
+                            '</svg>' +
+                        '</span>' +
+                        '<div class="min-w-0 flex-1">' +
+                            '<div class="flex items-start justify-between gap-2">' +
+                                '<p class="text-sm font-medium text-sihati-ink">' + escapeHtml(n.title) + '</p>' +
+                                (isUnread ? '<span class="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-sihati-primary" aria-label="Belum dibaca"></span>' : '') +
+                            '</div>' +
+                            '<p class="mt-0.5 text-xs text-sihati-slate line-clamp-2 leading-relaxed">' + escapeHtml(n.description || '') + '</p>' +
+                            '<p class="mt-1 text-[11px] text-sihati-steel">' + createdAt + '</p>' +
+                        '</div>' +
+                    '</a>';
+            }
+
+            container.innerHTML = html;
+
+            // Update mark all read button
+            var markAllBtn = document.getElementById('markAllReadBtn');
+            if (unread > 0) {
+                if (!markAllBtn) {
+                    var header = document.querySelector('#notificationDropdown .border-b .flex.items-center.justify-between');
+                    if (header) {
+                        var btn = document.createElement('button');
+                        btn.id = 'markAllReadBtn';
+                        btn.onclick = markAllNotificationsRead;
+                        btn.className = 'text-xs font-medium text-sihati-link transition hover:text-sihati-link-pressed focus:outline-none focus-visible:ring-2 focus-visible:ring-sihati-primary rounded-sm';
+                        btn.textContent = 'Tandai dibaca';
+                        header.appendChild(btn);
+                    }
+                }
+            } else {
+                if (markAllBtn) markAllBtn.remove();
+            }
+        } catch(e) {}
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        var d = document.createElement('div');
+        d.textContent = text;
+        return d.innerHTML;
+    }
+
+    setInterval(pollNotifications, 10000);
 </script>
 @endpush

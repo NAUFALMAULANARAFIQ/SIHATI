@@ -25,17 +25,19 @@
                         @method('PUT')
 
                         <div>
-                            <label class="block font-medium text-sm text-gray-700">Nama Bidang</label>
+                            <label for="nama_bidang" class="block font-medium text-sm text-gray-700">Nama Bidang</label>
                             <input type="text"
                                    name="nama_bidang"
+                                   id="nama_bidang"
                                    value="{{ old('nama_bidang', $bidang->nama_bidang) }}"
                                    class="mt-1 block w-full rounded-md border-gray-300"
                                    required>
                         </div>
 
                         <div>
-                            <label class="block font-medium text-sm text-gray-700">Keterangan</label>
+                            <label for="keterangan" class="block font-medium text-sm text-gray-700">Keterangan</label>
                             <textarea name="keterangan"
+                                      id="keterangan"
                                       rows="4"
                                       class="mt-1 block w-full rounded-md border-gray-300">{{ old('keterangan', $bidang->keterangan) }}</textarea>
                         </div>
@@ -43,10 +45,11 @@
                         <div class="flex items-center gap-2">
                             <input type="checkbox"
                                    name="is_active"
+                                   id="is_active"
                                    value="1"
                                    class="rounded"
                                    {{ old('is_active', $bidang->is_active) ? 'checked' : '' }}>
-                            <label class="text-sm text-gray-700">Bidang aktif</label>
+                            <label for="is_active" class="text-sm text-gray-700">Bidang aktif</label>
                         </div>
 
                         <div class="flex justify-end gap-2">

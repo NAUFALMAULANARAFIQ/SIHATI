@@ -52,7 +52,7 @@ class AduanController extends Controller
             });
         }
 
-        $aduans = $query->latest('tanggal_aduan')->paginate(20)->withQueryString();
+        $aduans = $query->latest('tanggal_aduan')->paginate(15)->withQueryString();
 
         $categories = Category::where('is_active', true)->get();
         $priorities = Priority::all();

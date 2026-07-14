@@ -19,7 +19,7 @@ class AduanController extends Controller
     {
         $user = Auth::user();
 
-        $query = Aduan::where('pelapor_id', $user->id)
+        $query = Aduan::where('bidang_id', $user->bidang_id)
             ->with(['category', 'priority', 'status', 'bidang']);
 
         if ($request->filled('status')) {
@@ -101,7 +101,7 @@ class AduanController extends Controller
     {
         $user = Auth::user();
 
-        if ($aduan->pelapor_id !== $user->id) {
+        if ($aduan->bidang_id !== $user->bidang_id) {
             abort(403, 'Anda tidak memiliki akses ke aduan ini.');
         }
 

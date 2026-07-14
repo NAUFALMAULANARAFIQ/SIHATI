@@ -24,9 +24,10 @@
                         @csrf
 
                         <div>
-                            <label class="block font-medium text-sm text-gray-700">Kode Status</label>
+                            <label for="kode_status" class="block font-medium text-sm text-gray-700">Kode Status</label>
                             <input type="text"
                                    name="kode_status"
+                                   id="kode_status"
                                    value="{{ old('kode_status') }}"
                                    class="mt-1 block w-full rounded-md border-gray-300"
                                    placeholder="contoh: diproses"
@@ -37,9 +38,10 @@
                         </div>
 
                         <div>
-                            <label class="block font-medium text-sm text-gray-700">Nama Status</label>
+                            <label for="nama_status" class="block font-medium text-sm text-gray-700">Nama Status</label>
                             <input type="text"
                                    name="nama_status"
+                                   id="nama_status"
                                    value="{{ old('nama_status') }}"
                                    class="mt-1 block w-full rounded-md border-gray-300"
                                    placeholder="contoh: Diproses"
@@ -47,9 +49,10 @@
                         </div>
 
                         <div>
-                            <label class="block font-medium text-sm text-gray-700">Urutan</label>
+                            <label for="urutan" class="block font-medium text-sm text-gray-700">Urutan</label>
                             <input type="number"
                                    name="urutan"
+                                   id="urutan"
                                    value="{{ old('urutan', 1) }}"
                                    min="1"
                                    class="mt-1 block w-full rounded-md border-gray-300"
@@ -59,10 +62,11 @@
                         <div class="flex items-center gap-2">
                             <input type="checkbox"
                                    name="is_final"
+                                   id="is_final"
                                    value="1"
                                    class="rounded"
                                    {{ old('is_final') ? 'checked' : '' }}>
-                            <label class="text-sm text-gray-700">Status final</label>
+                            <label for="is_final" class="text-sm text-gray-700">Status final</label>
                         </div>
 
                         <div class="flex justify-end gap-2">

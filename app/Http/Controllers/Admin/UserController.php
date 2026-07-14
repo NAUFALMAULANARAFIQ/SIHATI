@@ -17,7 +17,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('bidang')
-            ->latest()
+            ->orderByRaw("FIELD(role, 'admin', 'pegawai')")
+            ->oldest()
             ->paginate(10);
 
         $bidangs = Bidang::where('is_active', true)
@@ -137,7 +138,7 @@ class UserController extends Controller
             ],
             'email' => [
                 'required',
-                'email:rfc,dns',
+                'email:rfc',
                 'max:100',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
@@ -163,10 +164,6 @@ class UserController extends Controller
                 'nullable',
                 Rule::exists('bidangs', 'id'),
             ],
-            'is_active' => [
-                'nullable',
-                'boolean',
-            ],
         ]);
 
         if ($request->filled('password')) {
@@ -174,8 +171,6 @@ class UserController extends Controller
         } else {
             unset($validated['password']);
         }
-
-        $validated['is_active'] = $request->boolean('is_active');
 
         $user->update($validated);
 
@@ -194,31 +189,33 @@ class UserController extends Controller
             ->with('success', 'Pengguna berhasil diperbarui.');
     }
 
-    public function destroy(User $user)
+    public function toggleActive(User $user)
     {
         if (Auth::id() === $user->id) {
             return redirect()
                 ->route('admin.users.index')
-                ->with('error', 'Anda tidak dapat menghapus akun yang sedang digunakan.');
+                ->with('error', 'Anda tidak dapat menonaktifkan akun yang sedang digunakan.');
         }
 
         $oldValues = $this->safeUserLogData($user);
 
-        $user->delete();
+        $user->update(['is_active' => !$user->is_active]);
+
+        $status = $user->fresh()->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
         ActivityLogService::log(
-            'delete',
+            'update',
             'user',
-            'Admin menghapus pengguna: ' . $oldValues['name'],
+            'Admin ' . $status . ' pengguna: ' . $user->name,
             'users',
-            $oldValues['id'],
+            $user->id,
             $oldValues,
-            null
+            $this->safeUserLogData($user->fresh())
         );
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', 'Pengguna berhasil dihapus.');
+            ->with('success', 'Pengguna berhasil ' . $status . '.');
     }
 
 

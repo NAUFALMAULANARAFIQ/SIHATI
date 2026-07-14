@@ -13,6 +13,12 @@ class AduanStatusController extends Controller
     public function update(UpdateStatusRequest $request, Aduan $aduan)
     {
         try {
+            if ($request->filled('priority_id')) {
+                $aduan->update(['priority_id' => $request->priority_id]);
+            } elseif ($request->has('priority_id')) {
+                $aduan->update(['priority_id' => null]);
+            }
+
             $aduan = AduanService::changeStatus(
                 $aduan,
                 $request->status_kode,

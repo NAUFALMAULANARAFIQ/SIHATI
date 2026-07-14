@@ -185,7 +185,13 @@
             <tr>
                 <td class="label">Periode</td>
                 <td class="sep">:</td>
-                <td>{{ $request->tanggal_dari ?? '-' }} s/d {{ $request->tanggal_sampai ?? '-' }}</td>
+                <td>
+                    @if($request->tanggal_dari && $request->tanggal_sampai)
+                        {{ \Carbon\Carbon::parse($request->tanggal_dari)->format('d-m-Y') }} s/d {{ \Carbon\Carbon::parse($request->tanggal_sampai)->format('d-m-Y') }}
+                    @else
+                        Semua Periode
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td class="label">Tanggal Cetak</td>

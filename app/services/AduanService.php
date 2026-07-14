@@ -8,6 +8,8 @@ use App\Models\AduanComment;
 use App\Models\AduanNote;
 use App\Models\Rating;
 use App\Models\Status;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
@@ -35,6 +37,23 @@ class AduanService
             ]);
 
             AduanStatusService::createInitialStatus($aduan, $pelaporId);
+
+            $creator = User::find($pelaporId);
+            if ($creator && $creator->role === 'admin' && $data['bidang_id']) {
+                $targetUser = User::where('bidang_id', $data['bidang_id'])
+                    ->where('role', 'pegawai')
+                    ->first();
+                if ($targetUser) {
+                    $aduan->load('bidang');
+                    NotificationService::create(
+                        $targetUser->id,
+                        'new',
+                        "Aduan Baru: {$aduan->nomor_tiket}",
+                        "Admin membuat aduan untuk {$aduan->bidang?->nama_bidang}.",
+                        route('pegawai.aduan.show', $aduan)
+                    );
+                }
+            }
 
             if ($attachments && count($attachments) > 0) {
                 foreach ($attachments as $file) {

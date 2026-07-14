@@ -47,12 +47,14 @@ class LaporanController extends Controller
             $query->whereDate('tanggal_aduan', '<=', $request->tanggal_sampai);
         }
 
-        $aduans = $query->get();
+        $allAduans = $query->get();
 
-        $totalAduan = $aduans->count();
-        $diterima = $aduans->where('status.kode_status', 'diterima')->count();
-        $diproses = $aduans->where('status.kode_status', 'diproses')->count();
-        $selesai = $aduans->where('status.kode_status', 'selesai')->count();
+        $totalAduan = $allAduans->count();
+        $diterima = $allAduans->where('status.kode_status', 'diterima')->count();
+        $diproses = $allAduans->where('status.kode_status', 'diproses')->count();
+        $selesai = $allAduans->where('status.kode_status', 'selesai')->count();
+
+        $aduans = $query->paginate(15)->withQueryString();
 
         $aduanSelesai = Aduan::whereHas('status', fn($q) => $q->where('kode_status', 'selesai'));
         $ratingAvg = $aduanSelesai->join('ratings', 'aduans.id', '=', 'ratings.aduan_id')->avg('ratings.rating');
