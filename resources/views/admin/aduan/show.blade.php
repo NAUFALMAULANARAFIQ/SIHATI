@@ -17,12 +17,12 @@
                 <h1 class="text-xl font-semibold tracking-[-0.02em] text-sihati-primary md:text-2xl">{{ $aduan->nomor_tiket }}</h1>
                 @php
                     $s = $aduan->status?->nama_status ?? $aduan->status?->kode_status ?? 'diterima'; $sKey = strtolower($s);
-                    $sC = match($sKey){'diterima'=>'bg-sihati-lavender text-sihati-primary-deep','diproses'=>'bg-sihati-sky text-sihati-link-pressed','selesai'=>'bg-sihati-mint text-sihati-success',default=>'bg-sihati-gray text-sihati-slate'};
+                    $sC = match($sKey) { 'diterima' => 'bg-sihati-lavender text-sihati-primary-deep', 'diproses' => 'bg-sihati-sky text-sihati-link-pressed', 'selesai' => 'bg-sihati-mint text-sihati-success', default => 'bg-sihati-gray text-sihati-slate' };
                     $p = $aduan->priority?->nama_prioritas ?? '-';
-                    $pC = match(strtolower($p)){'rendah'=>'bg-sihati-gray text-sihati-slate','sedang'=>'bg-sihati-sky text-sihati-link-pressed','tinggi'=>'bg-sihati-yellow-bold text-sihati-charcoal','mendesak'=>'bg-sihati-rose text-sihati-error',default=>'bg-sihati-gray text-sihati-slate'};
+                    $pC = match(strtolower($p)) { 'rendah' => 'bg-sihati-gray text-sihati-slate', 'sedang' => 'bg-sihati-sky text-sihati-link-pressed', 'tinggi' => 'bg-sihati-yellow-bold text-sihati-charcoal', 'mendesak' => 'bg-sihati-rose text-sihati-error', default => 'bg-sihati-gray text-sihati-slate' };
                 @endphp
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
+                <span id="statusBadge" data-key="{{ $sKey }}" class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
+                <span id="priorityBadge" class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
             </div>
             <h2 class="mt-3 text-lg font-semibold text-sihati-charcoal md:text-xl">{{ $aduan->judul }}</h2>
             <p class="mt-1 text-sm text-sihati-steel">Dibuat {{ \Carbon\Carbon::parse($aduan->tanggal_aduan)->isoFormat('DD MMMM YYYY, HH:mm') }}</p>
@@ -95,14 +95,14 @@
             @include('pegawai.aduan.partials.notes', ['notes' => $aduan->notes ?? []])
         </div>
 
-        <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
-            <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Riwayat Status</h3>
-            @include('pegawai.aduan.partials.timeline', ['histories' => $aduan->histories ?? []])
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Riwayat Status</h3>
+        <div id="statusHistoryContainer" data-status-fetch-url="{{ route('admin.aduan.status.show', $aduan) }}" data-last-count="{{ count($aduan->histories ?? []) }}">
+        @include('pegawai.aduan.partials.timeline', ['histories' => $aduan->histories ?? []])
         </div>
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Komentar &amp; Diskusi</h3>
-            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan)])
+            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan), 'fetchUrl' => route('admin.aduan.comments.index', $aduan)])
         </div>
     </div>
 
@@ -234,4 +234,5 @@ document.addEventListener('DOMContentLoaded', function() {
 @endif
 </script>
 @endpush
+@include('pegawai.aduan.partials.status-live')
 </x-app-layout>

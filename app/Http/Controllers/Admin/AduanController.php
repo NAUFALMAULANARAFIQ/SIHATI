@@ -81,6 +81,7 @@ class AduanController extends Controller
             ->with('success', "Aduan berhasil dibuat dengan nomor tiket {$aduan->nomor_tiket}.");
     }
 
+
     public function show(Aduan $aduan)
     {
         $aduan->load([
@@ -98,5 +99,37 @@ class AduanController extends Controller
         ]);
 
         return view('admin.aduan.show', compact('aduan'));
+    }
+    public function status(Aduan $aduan)
+    {
+        $aduan->load([
+            'status',
+            'priority',
+            'histories' => fn($q) => $q->with(['statusSebelumnya', 'statusBaru', 'changedBy'])->latest(),
+        ]);
+
+        return response()->json($this->buildStatusPayload($aduan));
+    }
+
+    private function buildStatusPayload(Aduan $aduan): array
+    {
+        return [
+            'status' => [
+                'kode' => $aduan->status?->kode_status,
+                'nama' => $aduan->status?->nama_status ?? 'Diterima',
+            ],
+            'priority' => [
+                'nama' => $aduan->priority?->nama_prioritas ?? 'Rendah',
+            ],
+            'histories' => $aduan->histories->map(fn($h) => [
+                'id'                     => $h->id,
+                'status_baru_kode'       => $h->statusBaru?->kode_status,
+                'status_baru_nama'       => $h->statusBaru?->nama_status,
+                'status_sebelumnya_nama' => $h->statusSebelumnya?->nama_status,
+                'changed_by_name'        => $h->changedBy?->name,
+                'keterangan'             => $h->keterangan,
+                'created_at'             => \Carbon\Carbon::parse($h->created_at)->isoFormat('DD-MM-YYYY HH:mm'),
+            ])->values(),
+        ];
     }
 }

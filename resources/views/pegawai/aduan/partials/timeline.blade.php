@@ -1,7 +1,7 @@
 @props(['histories' => []])
 
 <div class="flow-root">
-    <ol class="relative border-s border-sihati-hairline">
+    <ol id="statusTimelineList" class="relative border-s border-sihati-hairline">
         @forelse ($histories as $history)
             <li class="mb-8 ms-6 last:mb-0">
                 @php
@@ -47,7 +47,7 @@
                 </div>
             </li>
         @empty
-            <li class="ms-6">
+            <li id="statusTimelineEmpty" class="ms-6">
                 <div class="rounded-lg border border-dashed border-sihati-hairline-strong bg-sihati-surface-soft p-6 text-center">
                     <p class="text-sm text-sihati-steel">Belum ada riwayat perubahan status.</p>
                 </div>
