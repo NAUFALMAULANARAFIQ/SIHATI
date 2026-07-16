@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="public/images/public/LogoWhite.svg" alt="SIHATI Logo" width="420">
+  <img src="public/images/LogoWhite.svg" alt="SIHATI Logo" width="420">
 </p>
 
 <h3 align="center">Sistem Informasi Helpdesk Aduan Terintegrasi Internal</h3>
 
 <p align="center">
   Platform helpdesk digital untuk pengelolaan aduan internal<br>
-  <strong>Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD)</strong>
+  <strong>Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK</strong>
 </p>
 
 <p align="center">
@@ -30,7 +30,7 @@
 
 ## Tentang SIHATI
 
-**SIHATI** (Sistem Informasi Helpdesk Aduan Terintegrasi Internal) adalah aplikasi web internal yang dikembangkan untuk **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD)** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
+**SIHATI** (Sistem Informasi Helpdesk Aduan Terintegrasi Internal) adalah aplikasi web internal yang dikembangkan untuk **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
 
 Sebelumnya, pelaporan kendala internal (fasilitas, sistem, administrasi, dan layanan pendukung lainnya) dilakukan secara manual dan tersebar di berbagai kanal komunikasi, sehingga sulit dipantau dan tidak terdokumentasi dengan baik. SIHATI hadir sebagai satu pintu terpusat: pegawai dapat mengajukan aduan dengan mudah, sementara admin dapat mengelola, menindaklanjuti, dan melacak status setiap aduan secara transparan dan akuntabel.
 
@@ -172,7 +172,7 @@ routes/
 
 ## Kontribusi
 
-Proyek ini dikembangkan dan dikelola untuk kebutuhan internal BPPKAD. Kontribusi dari anggota tim pengembang dapat dilakukan dengan alur berikut:
+Proyek ini dikembangkan dan dikelola untuk kebutuhan internal BPPKAD GRESIK. Kontribusi dari anggota tim pengembang dapat dilakukan dengan alur berikut:
 
 1. Buat *branch* baru dari `main`/`naufal` dengan nama deskriptif (mis. `fix/notifikasi-komentar`)
 2. Lakukan perubahan dan pastikan tidak merusak fitur yang sudah berjalan
@@ -181,7 +181,7 @@ Proyek ini dikembangkan dan dikelola untuk kebutuhan internal BPPKAD. Kontribusi
 
 ## Lisensi
 
-Perangkat lunak ini dikembangkan khusus untuk keperluan internal **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD)** dan tidak didistribusikan sebagai perangkat lunak sumber terbuka (*open source*). Seluruh hak penggunaan tunduk pada kebijakan internal instansi terkait.
+Perangkat lunak ini dikembangkan khusus untuk keperluan internal **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK** dan tidak didistribusikan sebagai perangkat lunak sumber terbuka (*open source*). Seluruh hak penggunaan tunduk pada kebijakan internal instansi terkait.
 
 ---
 
