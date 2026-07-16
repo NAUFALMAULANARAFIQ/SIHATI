@@ -121,4 +121,8 @@
             @endif
         </nav>
     </div>
+
+    <div class="sidebar-label border-t border-white/10 px-5 py-3 text-center text-[12px] text-sihati-on-dark-muted">
+        &copy; 2026 by Magang UIN-Malang
+    </div>
 </div>

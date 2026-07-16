@@ -53,8 +53,12 @@
                     <p class="text-sihati-steel text-sm">Sistem Helpdesk Aduan Teknologi Informasi</p>
                 </div>
                 @yield('content')
+                <div class="sidebar-label border-t border-white/10 px-5 py-3 text-center text-[15px] text-sihati-on-dark-muted">
+                    &copy; 2026 by Magang UIN-Malang
+                </div>
             </div>
         </div>
+
     </div>
     @stack('scripts')
 </body>

@@ -22,7 +22,7 @@
                 @error('email')
                     <p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>
                 @enderror
-            </div> 
+            </div>
 
             <div>
                 <label for="password" class="block text-sm font-medium text-sihati-charcoal mb-1.5">
@@ -40,13 +40,6 @@
                 @error('password')
                     <p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>
                 @enderror
-            </div>
-
-            <div class="flex items-center justify-between">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="remember" class="h-4 w-4 rounded border-sihati-hairline-strong text-sihati-primary focus:ring-sihati-primary/20">
-                    <span class="text-sm text-sihati-slate">Ingat saya</span>
-                </label>
             </div>
 
             <div class="pt-2">
