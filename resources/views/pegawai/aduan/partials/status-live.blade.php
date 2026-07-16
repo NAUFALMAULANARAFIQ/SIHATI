@@ -99,17 +99,12 @@
             }
 
             const data = await response.json();
-
-            // Selalu sinkronkan badge dengan data terbaru dari server,
-            // tidak bergantung pada perbandingan status sebelumnya.
             updateBadges(data.status, data.priority);
 
             if (data.histories.length > lastCount) {
                 const list = document.getElementById('statusTimelineList');
                 document.getElementById('statusTimelineEmpty')?.remove();
 
-                // histories dari server terurut terbaru lebih dulu (latest()),
-                // jadi entri baru berada di paling depan array -> sisipkan di awal <ol>.
                 const newCount = data.histories.length - lastCount;
                 const newHistories = data.histories.slice(0, newCount).reverse();
 
