@@ -26,6 +26,14 @@
   <a href="#kontribusi">Kontribusi</a>
 </p>
 
+<p align="center">
+    project ini di buat oleh peserta magang UIN-MALANG : 
+    Naufal Maulana Rafiq (230605110003)
+    Dewangga Ecky Putra Setiawan (230605110023)
+    Zakaria Nasrul Jabbar (230605110028)
+    Taufiq Luthfi Nurrohim (230605110037)
+</p>
+
 ---
 
 ## Tentang SIHATI
