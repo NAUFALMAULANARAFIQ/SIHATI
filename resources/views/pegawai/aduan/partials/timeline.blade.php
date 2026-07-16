@@ -10,10 +10,10 @@
                         'diproses' => 'bg-sihati-sky ring-sihati-sky text-sihati-link-pressed',
                         'selesai' => 'bg-sihati-mint ring-sihati-mint text-sihati-success',
                     ];
-                    $color = $statusColors[$history->status_baru?->kode_status ?? $history->status_baru] ?? 'bg-sihati-gray ring-sihati-gray text-sihati-slate';
+                    $color = $statusColors[$history->statusBaru?->kode_status] ?? 'bg-sihati-gray ring-sihati-gray text-sihati-slate';
                 @endphp
                 <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full ring-4 ring-sihati-canvas {{ $color }}">
-                    @if(($history->status_baru?->kode_status ?? $history->status_baru) === 'selesai')
+                    @if($history->statusBaru?->kode_status === 'selesai')
                         <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                         </svg>
@@ -26,12 +26,12 @@
                 <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-4 shadow-subtle">
                     <div class="flex flex-wrap items-center gap-2">
                         <h3 class="text-sm font-semibold text-sihati-ink">
-                            {{ $history->status_baru?->nama_status ?? ucfirst($history->status_baru) }}
+                            {{ $history->statusBaru?->nama_status }}
                         </h3>
-                        @if($history->status_sebelumnya)
+                        @if($history->statusSebelumnya)
                             <span class="text-xs text-sihati-steel">dari</span>
                             <span class="rounded-md bg-sihati-surface px-2 py-0.5 text-xs font-medium text-sihati-slate">
-                                {{ $history->status_sebelumnya?->nama_status ?? ucfirst($history->status_sebelumnya) }}
+                                {{ $history->statusSebelumnya?->nama_status }}
                             </span>
                         @endif
                     </div>

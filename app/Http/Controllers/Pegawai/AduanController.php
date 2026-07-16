@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AduanController extends Controller
 {
-    public function index(Request $request)
+    private function buildQuery(Request $request): \Illuminate\Database\Eloquent\Builder
     {
         $user = Auth::user();
 
         $query = Aduan::where('bidang_id', $user->bidang_id)
-            ->with(['category', 'priority', 'status', 'bidang']);
+            ->with(['category', 'priority', 'status']);
 
         if ($request->filled('status')) {
             $query->whereHas('status', fn($q) => $q->where('kode_status', $request->status));
@@ -37,7 +37,6 @@ class AduanController extends Controller
             });
         }
 
-        // ── Date range filter ──
         $startDate = null;
         $endDate   = null;
 
@@ -61,7 +60,12 @@ class AduanController extends Controller
             $query->whereBetween('tanggal_aduan', [$startDate, $endDate]);
         }
 
-        $aduans = $query->latest('tanggal_aduan')->paginate(10)->withQueryString();
+        return $query;
+    }
+
+    public function index(Request $request)
+    {
+        $aduans = $this->buildQuery($request)->latest('tanggal_aduan')->paginate(10)->withQueryString();
 
         $categories = Category::where('is_active', true)->get();
         $priorities = Priority::all();
@@ -69,6 +73,18 @@ class AduanController extends Controller
         $statuses = Status::all();
 
         return view('pegawai.aduan.index', compact('aduans', 'categories', 'priorities', 'bidangs', 'statuses'));
+    }
+
+    public function list(Request $request)
+    {
+        $aduans = $this->buildQuery($request)->latest('tanggal_aduan')->paginate(10)->withQueryString();
+
+        return response()->json($aduans->getCollection()->map(fn($a) => [
+            'id'            => $a->id,
+            'status_kode'   => $a->status?->kode_status,
+            'status_nama'   => $a->status?->nama_status ?? 'Diterima',
+            'priority_nama' => $a->priority?->nama_prioritas ?? '-',
+        ]));
     }
 
     public function create()
@@ -114,9 +130,7 @@ class AduanController extends Controller
             'attachments.uploader',
             'notes.petugas',
             'comments.user',
-            'histories.statusSebelumnya',
-            'histories.statusBaru',
-            'histories.changedBy',
+            'histories' => fn($q) => $q->with(['statusSebelumnya', 'statusBaru', 'changedBy'])->latest(),
             'ratings.user',
         ]);
 
@@ -126,7 +140,7 @@ class AduanController extends Controller
     {
         $user = Auth::user();
 
-        if ($aduan->pelapor_id !== $user->id) {
+        if ($aduan->bidang_id !== $user->bidang_id) {
             abort(403, 'Anda tidak memiliki akses ke aduan ini.');
         }
 
@@ -142,7 +156,7 @@ class AduanController extends Controller
                 'nama' => $aduan->status?->nama_status ?? 'Diterima',
             ],
             'priority' => [
-                'nama' => $aduan->priority?->nama_prioritas ?? 'Rendah',
+                'nama' => $aduan->priority?->nama_prioritas,
             ],
             'histories' => $aduan->histories->map(fn($h) => [
                 'id'                     => $h->id,
