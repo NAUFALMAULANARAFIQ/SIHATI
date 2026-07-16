@@ -129,9 +129,9 @@
                     class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">{{ old('deskripsi') }}</textarea>
             </div>
             <div class="flex items-center gap-2 pt-1">
-                <input type="checkbox" name="is_active" value="1" checked
+                <input type="checkbox" name="is_active" id="tk-is_active" value="1" checked
                     class="h-4 w-4 rounded border-sihati-hairline-strong text-sihati-primary focus:ring-sihati-primary/20">
-                <label class="text-sm text-sihati-charcoal">Kategori aktif</label>
+                <label for="tk-is_active" class="text-sm text-sihati-charcoal">Kategori aktif</label>
             </div>
             <div class="flex items-center justify-end gap-3 border-t border-sihati-hairline pt-4">
                 <button type="button" onclick="closeModal('tambahKategoriModal')" class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>

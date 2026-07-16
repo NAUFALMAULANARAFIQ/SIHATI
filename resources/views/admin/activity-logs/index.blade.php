@@ -27,26 +27,26 @@
         <div id="filterPanel" class="absolute right-0 z-40 mt-2 hidden w-[360px] rounded-xl border border-sihati-hairline bg-sihati-canvas p-5 shadow-modal">
             <form method="GET" action="{{ route('admin.activity-logs.index') }}" class="space-y-4">
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Pencarian</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Pencarian</span>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari deskripsi, aksi, modul..."
                         class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Dari Tanggal</label>
+                        <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Dari Tanggal</span>
                         <input type="date" name="date_from" value="{{ request('date_from') }}"
                             class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                     </div>
                     <div>
-                        <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Sampai Tanggal</label>
+                        <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Sampai Tanggal</span>
                         <input type="date" name="date_to" value="{{ request('date_to') }}"
                             class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Modul</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Modul</span>
                     <div class="mt-1.5 flex max-h-32 flex-wrap gap-2 overflow-y-auto">
                         @foreach ($modules as $mod)
                         <label class="flex cursor-pointer items-center gap-1.5 rounded-md border border-sihati-hairline-soft px-2.5 py-1.5 text-sm transition hover:bg-sihati-surface {{ in_array($mod, (array) request('modules', [])) ? 'border-sihati-primary bg-sihati-lavender/30 text-sihati-primary-deep' : 'text-sihati-slate' }}">
@@ -58,7 +58,7 @@
                 </div>
 
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Aksi</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Aksi</span>
                     <div class="mt-1.5 flex max-h-32 flex-wrap gap-2 overflow-y-auto">
                         @foreach ($actions as $act)
                         <label class="flex cursor-pointer items-center gap-1.5 rounded-md border border-sihati-hairline-soft px-2.5 py-1.5 text-sm transition hover:bg-sihati-surface {{ in_array($act, (array) request('actions', [])) ? 'border-sihati-primary bg-sihati-lavender/30 text-sihati-primary-deep' : 'text-sihati-slate' }}">
@@ -70,7 +70,7 @@
                 </div>
 
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Pengguna</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Pengguna</span>
                     <select name="user_id" class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="">Semua pengguna</option>
                         @foreach ($users as $u)
@@ -80,7 +80,7 @@
                 </div>
 
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Urutkan</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Urutkan</span>
                     <select name="sort" class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="desc" {{ request('sort') === 'desc' ? 'selected' : '' }}>Terbaru</option>
                         <option value="asc" {{ request('sort') === 'asc' ? 'selected' : '' }}>Terlama</option>

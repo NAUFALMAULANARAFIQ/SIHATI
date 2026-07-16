@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AduanController extends Controller
 {
-    public function index(Request $request)
+    private function buildQuery(Request $request): \Illuminate\Database\Eloquent\Builder
     {
         $query = Aduan::with([
             'pelapor',
@@ -52,13 +52,30 @@ class AduanController extends Controller
             });
         }
 
-        $aduans = $query->latest('tanggal_aduan')->paginate(20)->withQueryString();
+        return $query;
+    }
+
+    public function index(Request $request)
+    {
+        $aduans = $this->buildQuery($request)->latest('tanggal_aduan')->paginate(15)->withQueryString();
 
         $categories = Category::where('is_active', true)->get();
         $priorities = Priority::all();
         $bidangs = Bidang::all();
 
         return view('admin.aduan.index', compact('aduans', 'categories', 'priorities', 'bidangs'));
+    }
+
+    public function list(Request $request)
+    {
+        $aduans = $this->buildQuery($request)->latest('tanggal_aduan')->paginate(15)->withQueryString();
+
+        return response()->json($aduans->getCollection()->map(fn($a) => [
+            'id'            => $a->id,
+            'status_kode'   => $a->status?->kode_status,
+            'status_nama'   => $a->status?->nama_status ?? 'Diterima',
+            'priority_nama' => $a->priority?->nama_prioritas ?? '-',
+        ]));
     }
 
     public function create()
@@ -81,6 +98,7 @@ class AduanController extends Controller
             ->with('success', "Aduan berhasil dibuat dengan nomor tiket {$aduan->nomor_tiket}.");
     }
 
+
     public function show(Aduan $aduan)
     {
         $aduan->load([
@@ -98,5 +116,37 @@ class AduanController extends Controller
         ]);
 
         return view('admin.aduan.show', compact('aduan'));
+    }
+    public function status(Aduan $aduan)
+    {
+        $aduan->load([
+            'status',
+            'priority',
+            'histories' => fn($q) => $q->with(['statusSebelumnya', 'statusBaru', 'changedBy'])->latest(),
+        ]);
+
+        return response()->json($this->buildStatusPayload($aduan));
+    }
+
+    private function buildStatusPayload(Aduan $aduan): array
+    {
+        return [
+            'status' => [
+                'kode' => $aduan->status?->kode_status,
+                'nama' => $aduan->status?->nama_status ?? 'Diterima',
+            ],
+            'priority' => [
+                'nama' => $aduan->priority?->nama_prioritas,
+            ],
+            'histories' => $aduan->histories->map(fn($h) => [
+                'id'                     => $h->id,
+                'status_baru_kode'       => $h->statusBaru?->kode_status,
+                'status_baru_nama'       => $h->statusBaru?->nama_status,
+                'status_sebelumnya_nama' => $h->statusSebelumnya?->nama_status,
+                'changed_by_name'        => $h->changedBy?->name,
+                'keterangan'             => $h->keterangan,
+                'created_at'             => \Carbon\Carbon::parse($h->created_at)->isoFormat('DD-MM-YYYY HH:mm'),
+            ])->values(),
+        ];
     }
 }

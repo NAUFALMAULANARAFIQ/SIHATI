@@ -8,6 +8,8 @@ use App\Models\AduanComment;
 use App\Models\AduanNote;
 use App\Models\Rating;
 use App\Models\Status;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
@@ -35,6 +37,23 @@ class AduanService
             ]);
 
             AduanStatusService::createInitialStatus($aduan, $pelaporId);
+
+            $creator = User::find($pelaporId);
+            if ($creator && $creator->role === 'admin' && $data['bidang_id']) {
+                $targetUser = User::where('bidang_id', $data['bidang_id'])
+                    ->where('role', 'pegawai')
+                    ->first();
+                if ($targetUser) {
+                    $aduan->load('bidang');
+                    NotificationService::create(
+                        $targetUser->id,
+                        'new',
+                        "Aduan Baru: {$aduan->nomor_tiket}",
+                        "Admin membuat aduan untuk {$aduan->bidang?->nama_bidang}.",
+                        route('pegawai.aduan.show', $aduan)
+                    );
+                }
+            }
 
             if ($attachments && count($attachments) > 0) {
                 foreach ($attachments as $file) {
@@ -142,6 +161,8 @@ class AduanService
             'komentar' => $komentar,
         ]);
 
+        self::notifyNewComment($aduan, $userId);
+
         ActivityLogService::log(
             action: 'add_comment',
             module: 'aduan',
@@ -153,7 +174,6 @@ class AduanService
 
         return $comment->fresh(['user']);
     }
-
     public static function addNote(Aduan $aduan, string $catatan, int $petugasId): AduanNote
     {
         $note = AduanNote::create([
@@ -205,5 +225,32 @@ class AduanService
         );
 
         return $ratingRecord->fresh(['user']);
+    }
+
+    private static function notifyNewComment(Aduan $aduan, int $commenterId): void
+    {
+        if ($commenterId === $aduan->pelapor_id) {
+            $admins = $aduan->petugas_id
+                ? User::where('id', $aduan->petugas_id)->get()
+                : User::where('role', 'admin')->get();
+
+            foreach ($admins as $admin) {
+                NotificationService::create(
+                    userId: $admin->id,
+                    type: 'comment',
+                    title: 'Komentar Baru pada Aduan',
+                    description: "Ada komentar baru pada aduan {$aduan->nomor_tiket}.",
+                    url: route('admin.aduan.show', $aduan)
+                );
+            }
+        } else {
+            NotificationService::create(
+                userId: $aduan->pelapor_id,
+                type: 'comment',
+                title: 'Komentar Baru pada Aduan',
+                description: "Ada komentar baru pada aduan {$aduan->nomor_tiket} Anda.",
+                url: route('pegawai.aduan.show', $aduan)
+            );
+        }
     }
 }

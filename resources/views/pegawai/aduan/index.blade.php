@@ -49,14 +49,14 @@
             </thead>
             <tbody class="divide-y divide-sihati-hairline-soft bg-sihati-canvas">
                 @forelse ($aduans as $aduan)
-                <tr class="transition hover:bg-sihati-surface-soft">
+                <tr class="transition hover:bg-sihati-surface-soft" data-aduan-id="{{ $aduan->id }}">
                     <td class="whitespace-nowrap px-4 py-3.5">
                         <a href="{{ route('pegawai.aduan.show', $aduan) }}" class="text-sm font-medium text-sihati-primary hover:text-sihati-primary-pressed">{{ $aduan->nomor_tiket }}</a>
                     </td>
                     <td class="max-w-[200px] px-4 py-3.5"><p class="truncate text-sm font-medium text-sihati-charcoal">{{ $aduan->judul }}</p></td>
                     <td class="whitespace-nowrap px-4 py-3.5 text-sm text-sihati-slate">{{ $aduan->category?->nama_kategori ?? '-' }}</td>
                     <td class="whitespace-nowrap px-4 py-3.5">
-                        @php $p = $aduan->priority?->nama_prioritas ?? 'Rendah'; $pC = match(strtolower($p)) { 'rendah' => 'bg-sihati-gray text-sihati-slate', 'sedang' => 'bg-sihati-sky text-sihati-link-pressed', 'tinggi' => 'bg-sihati-yellow-bold text-sihati-charcoal', 'mendesak' => 'bg-sihati-rose text-sihati-error', default => 'bg-sihati-gray text-sihati-slate' }; @endphp
+                        @php $p = $aduan->priority?->nama_prioritas ?? '-'; $pC = $p === '-' ? 'bg-sihati-gray text-sihati-stone italic' : match(strtolower($p)) { 'rendah' => 'bg-sihati-gray text-sihati-slate', 'sedang' => 'bg-sihati-sky text-sihati-link-pressed', 'tinggi' => 'bg-sihati-yellow-bold text-sihati-charcoal', 'mendesak' => 'bg-sihati-rose text-sihati-error', default => 'bg-sihati-gray text-sihati-slate' }; @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
                     </td>
                     <td class="whitespace-nowrap px-4 py-3.5">
@@ -90,5 +90,54 @@
 @endif
 
 @include('partials.aduan-modal')
+
+@push('scripts')
+<script>
+(function () {
+    const fetchUrl = '{{ route("pegawai.aduan.list") }}?{{ http_build_query(request()->query()) }}';
+    if (!document.querySelector('tr[data-aduan-id]')) return;
+
+    const statusColors = {
+        diterima: 'bg-sihati-lavender text-sihati-primary-deep',
+        diproses: 'bg-sihati-sky text-sihati-link-pressed',
+        selesai: 'bg-sihati-mint text-sihati-success',
+    };
+    const priorityColors = {
+        rendah: 'bg-sihati-gray text-sihati-slate',
+        sedang: 'bg-sihati-sky text-sihati-link-pressed',
+        tinggi: 'bg-sihati-yellow-bold text-sihati-charcoal',
+        mendesak: 'bg-sihati-rose text-sihati-error',
+    };
+    const badgeBase = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold';
+
+    async function poll() {
+        try {
+            const res = await fetch(fetchUrl, { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+            if (!res.ok) return;
+            const items = await res.json();
+            items.forEach(function (item) {
+                const row = document.querySelector('tr[data-aduan-id="' + item.id + '"]');
+                if (!row) return;
+
+                const cells = row.querySelectorAll('td');
+                const priorityCell = cells[3];
+                const statusCell = cells[4];
+                if (!priorityCell || !statusCell) return;
+
+                const pKey = (item.priority_nama || '').toLowerCase();
+                const pColor = priorityColors[pKey] || 'bg-sihati-gray text-sihati-slate';
+                priorityCell.innerHTML = '<span class="' + badgeBase + ' ' + pColor + '">' + (item.priority_nama || '-') + '</span>';
+
+                const sKey = (item.status_kode || '').toLowerCase();
+                const sColor = statusColors[sKey] || 'bg-sihati-gray text-sihati-slate';
+                statusCell.innerHTML = '<span class="' + badgeBase + ' ' + sColor + '">' + (item.status_nama || '-') + '</span>';
+            });
+        } catch (e) {}
+    }
+
+    setInterval(poll, 4000);
+})();
+</script>
+@endpush
 
 </x-app-layout>

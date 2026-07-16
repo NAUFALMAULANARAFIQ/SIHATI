@@ -87,13 +87,29 @@ class AduanStatusService
 
         $aduan->update($updateData);
 
-        NotificationService::create(
-            userId: $aduan->pelapor_id,
-            type: 'status',
-            title: 'Status Aduan Diperbarui',
-            description: "Status aduan {$aduan->nomor_tiket} berubah menjadi {$statusBaru->nama_status}.",
-            url: route('pegawai.aduan.show', $aduan)
-        );
+        $pelapor = $aduan->pelapor;
+        if ($pelapor && $pelapor->role !== 'admin') {
+            NotificationService::create(
+                userId: $pelapor->id,
+                type: 'status',
+                title: 'Status Aduan Diperbarui',
+                description: "Status aduan {$aduan->nomor_tiket} berubah menjadi {$statusBaru->nama_status}.",
+                url: route('pegawai.aduan.show', $aduan)
+            );
+        }
+
+        $bidangUser = User::where('bidang_id', $aduan->bidang_id)
+            ->where('role', 'pegawai')
+            ->first();
+        if ($bidangUser && $bidangUser->id !== $aduan->pelapor_id) {
+            NotificationService::create(
+                userId: $bidangUser->id,
+                type: 'status',
+                title: 'Status Aduan Diperbarui',
+                description: "Status aduan {$aduan->nomor_tiket} berubah menjadi {$statusBaru->nama_status}.",
+                url: route('pegawai.aduan.show', $aduan)
+            );
+        }
 
         AduanStatusHistory::create([
             'aduan_id' => $aduan->id,

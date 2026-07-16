@@ -22,7 +22,7 @@
         <form method="GET" action="{{ url()->current() }}" class="space-y-4">
             {{-- Search --}}
             <div>
-                <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Cari Tiket / Judul</label>
+                <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Cari Tiket / Judul</span>
                 <input type="text" name="search" value="{{ request('search') }}"
                     placeholder="SIHATI-2026-... atau judul"
                     class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
@@ -31,7 +31,7 @@
             {{-- Category + Status --}}
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Kategori</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Kategori</span>
                     <select name="category"
                         class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="">Semua</option>
@@ -41,7 +41,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Status</label>
+                    <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Status</span>
                     <select name="status"
                         class="mt-1.5 h-10 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-3 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
                         <option value="">Semua</option>
@@ -54,7 +54,7 @@
 
             {{-- Date range --}}
             <div>
-                <label class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Rentang Tanggal</label>
+                <span class="text-xs font-semibold uppercase tracking-[0.06em] text-sihati-steel">Rentang Tanggal</span>
                 <div class="mt-1.5 grid grid-cols-2 gap-3">
                     <div>
                         <input type="date" name="start_date" value="{{ request('start_date') }}"

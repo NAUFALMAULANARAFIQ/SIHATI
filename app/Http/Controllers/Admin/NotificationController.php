@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\User;
+use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,6 +55,29 @@ class NotificationController extends Controller
 
         return response()->json([
             'success' => true,
+        ]);
+    }
+
+    public function showAll(): View
+    {
+        $allNotifications = \App\Models\Notification::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('admin.notifications.index', compact('allNotifications'));
+    }
+
+    public function unreadCount(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $count = $user->appNotifications()
+            ->where('is_read', false)
+            ->count();
+
+        return response()->json([
+            'count' => $count,
         ]);
     }
 

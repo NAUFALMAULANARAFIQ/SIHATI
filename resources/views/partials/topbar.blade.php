@@ -31,7 +31,7 @@ default => 'SIHATI BPPKAD'
                 </svg>
             </button>
             <a href="{{ $isAdmin ? route('admin.dashboard') : route('pegawai.dashboard') }}" class="flex items-center">
-                <img src="{{ asset('images/logo.png') }}" alt="SIHATI BPPKAD" class="h-8 w-auto">
+                <img src="{{ asset('images/LogoNavy.svg') }}" alt="SIHATI BPPKAD" class="h-12 w-auto">
             </a>
         </div>
 

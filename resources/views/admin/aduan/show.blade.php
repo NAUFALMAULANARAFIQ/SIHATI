@@ -4,7 +4,7 @@
 @endphp
 
 <x-app-layout :title="$aduan->nomor_tiket . ' - SIHATI BPPKAD'">
-<nav class="mb-4 text-sm text-sihati-steel">
+<nav class="mb-4 pt-5 font-semibold text-sm text-sihati-steel">
     <a href="{{ route('admin.aduan.index') }}" class="hover:text-sihati-link">Aduan</a>
     <span class="mx-2">/</span>
     <span class="text-sihati-charcoal">{{ $aduan->nomor_tiket }}</span>
@@ -17,12 +17,12 @@
                 <h1 class="text-xl font-semibold tracking-[-0.02em] text-sihati-primary md:text-2xl">{{ $aduan->nomor_tiket }}</h1>
                 @php
                     $s = $aduan->status?->nama_status ?? $aduan->status?->kode_status ?? 'diterima'; $sKey = strtolower($s);
-                    $sC = match($sKey){'diterima'=>'bg-sihati-lavender text-sihati-primary-deep','diproses'=>'bg-sihati-sky text-sihati-link-pressed','selesai'=>'bg-sihati-mint text-sihati-success',default=>'bg-sihati-gray text-sihati-slate'};
-                    $p = $aduan->priority?->nama_prioritas ?? 'Rendah';
-                    $pC = match(strtolower($p)){'rendah'=>'bg-sihati-gray text-sihati-slate','sedang'=>'bg-sihati-sky text-sihati-link-pressed','tinggi'=>'bg-sihati-yellow-bold text-sihati-charcoal','mendesak'=>'bg-sihati-rose text-sihati-error',default=>'bg-sihati-gray text-sihati-slate'};
+                    $sC = match($sKey) { 'diterima' => 'bg-sihati-lavender text-sihati-primary-deep', 'diproses' => 'bg-sihati-sky text-sihati-link-pressed', 'selesai' => 'bg-sihati-mint text-sihati-success', default => 'bg-sihati-gray text-sihati-slate' };
+                    $p = $aduan->priority?->nama_prioritas ?? '-';
+                    $pC = match(strtolower($p)) { 'rendah' => 'bg-sihati-gray text-sihati-slate', 'sedang' => 'bg-sihati-sky text-sihati-link-pressed', 'tinggi' => 'bg-sihati-yellow-bold text-sihati-charcoal', 'mendesak' => 'bg-sihati-rose text-sihati-error', default => 'bg-sihati-gray text-sihati-slate' };
                 @endphp
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
+                <span id="statusBadge" data-key="{{ $sKey }}" class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
+                <span id="priorityBadge" class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
             </div>
             <h2 class="mt-3 text-lg font-semibold text-sihati-charcoal md:text-xl">{{ $aduan->judul }}</h2>
             <p class="mt-1 text-sm text-sihati-steel">Dibuat {{ \Carbon\Carbon::parse($aduan->tanggal_aduan)->isoFormat('DD MMMM YYYY, HH:mm') }}</p>
@@ -95,14 +95,14 @@
             @include('pegawai.aduan.partials.notes', ['notes' => $aduan->notes ?? []])
         </div>
 
-        <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
-            <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Riwayat Status</h3>
-            @include('pegawai.aduan.partials.timeline', ['histories' => $aduan->histories ?? []])
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Riwayat Status</h3>
+        <div id="statusHistoryContainer" data-status-fetch-url="{{ route('admin.aduan.status.show', $aduan) }}" data-last-count="{{ count($aduan->histories ?? []) }}">
+        @include('pegawai.aduan.partials.timeline', ['histories' => $aduan->histories ?? []])
         </div>
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Komentar &amp; Diskusi</h3>
-            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan)])
+            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('admin.aduan.comments.store', $aduan), 'fetchUrl' => route('admin.aduan.comments.index', $aduan)])
         </div>
     </div>
 
@@ -158,18 +158,32 @@
             </button>
         </div>
         <p class="mt-2 text-sm leading-6 text-sihati-slate">Aduan: <strong>{{ $aduan->nomor_tiket }}</strong> — Status saat ini: <strong>{{ $s }}</strong></p>
-        <form method="POST" action="{{ route('admin.aduan.status.update', $aduan) }}" class="mt-5 space-y-4">
+        <form method="POST" action="{{ route('admin.aduan.status.update', $aduan) }}" class="mt-5 space-y-4" novalidate>
             @csrf @method('PATCH')
             <div>
-                <label for="status" class="block text-sm font-medium text-sihati-charcoal">Status Baru <span class="text-sihati-error">*</span></label>
-                <select id="status_kode" name="status_kode" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
+                <label for="status_kode" class="block text-sm font-medium text-sihati-charcoal">Status Baru <span class="text-sihati-error">*</span></label>
+                <select id="status_kode" name="status_kode" required
+                    class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('status_kode') border-sihati-error @enderror">
                     <option value="">Pilih status</option>
-                    @foreach (\App\Models\Status::all() as $st)<option value="{{ $st->kode_status }}" {{ $st->kode_status === $statusKey ? 'disabled' : '' }}>{{ $st->nama_status }} {{ $st->kode_status === $statusKey ? '(saat ini)' : '' }}</option>@endforeach
+                    @foreach (\App\Models\Status::all() as $st)<option value="{{ $st->kode_status }}" {{ old('status_kode', $st->kode_status === $statusKey ? $statusKey : '') === $st->kode_status ? 'selected' : '' }} {{ $st->kode_status === $statusKey ? 'disabled' : '' }}>{{ $st->nama_status }} {{ $st->kode_status === $statusKey ? '(saat ini)' : '' }}</option>@endforeach
                 </select>
+                @error('status_kode')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label for="aduan_priority_id" class="block text-sm font-medium text-sihati-charcoal">Prioritas <span class="text-sihati-error">*</span></label>
+                <select id="aduan_priority_id" name="priority_id" required
+                    class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('priority_id') border-sihati-error @enderror">
+                    <option value="">Pilih prioritas</option>
+                    @foreach (\App\Models\Priority::all() as $pr)
+                        <option value="{{ $pr->id }}" {{ old('priority_id', $aduan->priority_id) == $pr->id ? 'selected' : '' }}>{{ $pr->nama_prioritas }}</option>
+                    @endforeach
+                </select>
+                @error('priority_id')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label for="keterangan" class="block text-sm font-medium text-sihati-charcoal">Catatan (opsional)</label>
-                <textarea id="keterangan" name="keterangan" rows="3" placeholder="Tambahkan catatan perubahan status..." class="mt-1.5 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20"></textarea>
+                <textarea id="keterangan" name="keterangan" rows="3" placeholder="Tambahkan catatan perubahan status..." class="mt-1.5 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('keterangan') border-sihati-error @enderror"></textarea>
+                @error('keterangan')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
             </div>
             <div class="flex justify-end gap-3 pt-2">
                 <button type="button" onclick="closeModal('updateStatusModal')" class="rounded-md border border-sihati-hairline-strong px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>
@@ -205,6 +219,20 @@
 <script>
 function openModal(id){document.getElementById(id)?.classList.remove('hidden');document.getElementById(id)?.classList.add('flex');}
 function closeModal(id){document.getElementById(id)?.classList.add('hidden');document.getElementById(id)?.classList.remove('flex');}
+
+document.querySelector('#updateStatusModal form')?.addEventListener('submit', function(e) {
+    if (!this.checkValidity()) {
+        e.preventDefault();
+        this.reportValidity();
+    }
+});
+
+@if($errors->has('status_kode') || $errors->has('priority_id'))
+document.addEventListener('DOMContentLoaded', function() {
+    openModal('updateStatusModal');
+});
+@endif
 </script>
 @endpush
+@include('pegawai.aduan.partials.status-live')
 </x-app-layout>

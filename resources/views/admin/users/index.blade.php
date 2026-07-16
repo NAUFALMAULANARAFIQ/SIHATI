@@ -23,7 +23,7 @@
                     <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Role</th>
                     <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Bidang</th>
                     <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Status</th>
-                    <th class="whitespace-nowrap px-4 py-3.5 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Aksi</th>
+                    <th class="whitespace-nowrap px-4 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-sihati-steel">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-sihati-hairline-soft bg-sihati-canvas">
@@ -48,7 +48,7 @@
                     <td class="whitespace-nowrap px-4 py-3.5 text-sm text-sihati-slate">{{ $user->bidang?->nama_bidang ?? '-' }}</td>
                     <td class="whitespace-nowrap px-4 py-3.5">@if($user->is_active)<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-sihati-mint text-sihati-success">Aktif</span>@else<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-sihati-rose text-sihati-error">Nonaktif</span>@endif</td>
                     <td class="whitespace-nowrap px-4 py-3.5 text-right">
-                        <div class="flex items-center justify-end gap-2">
+                        <div class="flex items-center justify-start gap-2">
                             <button type="button" onclick="showUserDetail(this)" data-user='{{ json_encode([
                                 'name' => $user->name,
                                 'username' => $user->username,
@@ -70,9 +70,11 @@
                                 'is_active' => $user->is_active,
                             ]) }}' class="rounded-md bg-sihati-yellow-bold px-3 py-1.5 text-xs font-medium text-sihati-charcoal transition hover:bg-sihati-yellow">Edit</button>
                             @if (auth()->id() !== $user->id)
-                            <form id="delete-form-{{ $user->id }}" action="{{ route('admin.users.destroy', $user) }}" method="POST">
-                                @csrf @method('DELETE')
-                                <button type="button" onclick="confirmDelete('delete-form-{{ $user->id }}', 'pengguna {{ $user->name }}')" class="rounded-md bg-sihati-rose px-3 py-1.5 text-xs font-medium text-sihati-error transition hover:bg-red-200">Nonaktifkan</button>
+                            <form id="toggle-form-{{ $user->id }}" action="{{ route('admin.users.toggle-active', $user) }}" method="POST" class="inline">
+                                @csrf @method('PATCH')
+                                <button type="button" onclick="confirmToggle('toggle-form-{{ $user->id }}', 'Yakin ingin {{ $user->is_active ? 'menonaktifkan' : 'mengaktifkan' }} pengguna {{ $user->name }}?')" class="rounded-md px-3 py-1.5 text-xs font-medium transition {{ $user->is_active ? 'bg-sihati-rose text-sihati-error hover:bg-red-200' : 'bg-sihati-mint text-sihati-success hover:bg-green-200' }}">
+                                    {{ $user->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
+                                </button>
                             </form>
                             @endif
                         </div>
@@ -153,19 +155,28 @@
             </div>
             <div>
                 <label for="edit-password" class="block text-sm font-medium text-sihati-charcoal">Password Baru</label>
-                <input type="password" name="password" id="edit-password"
-                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
+                <div class="relative">
+                    <input type="password" name="password" id="edit-password"
+                        class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone pr-10 focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
+                    <button type="button" onclick="togglePassword('edit-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sihati-stone hover:text-sihati-slate">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                        </svg>
+                    </button>
+                </div>
                 <p class="mt-1.5 text-xs text-sihati-stone">Kosongkan jika tidak ingin mengubah password.</p>
             </div>
             <div>
                 <label for="edit-password_confirmation" class="block text-sm font-medium text-sihati-charcoal">Konfirmasi Password</label>
-                <input type="password" name="password_confirmation" id="edit-password_confirmation"
-                    class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
-            </div>
-            <div class="flex items-center gap-2 pt-1">
-                <input type="checkbox" name="is_active" id="edit-is_active" value="1" checked
-                    class="h-4 w-4 rounded border-sihati-hairline-strong text-sihati-primary focus:ring-sihati-primary/20">
-                <label for="edit-is_active" class="text-sm text-sihati-charcoal">Akun aktif</label>
+                <div class="relative">
+                    <input type="password" name="password_confirmation" id="edit-password_confirmation"
+                        class="mt-1.5 block w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2.5 text-sm text-sihati-ink placeholder:text-sihati-stone pr-10 focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20">
+                    <button type="button" onclick="togglePassword('edit-password_confirmation', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sihati-stone hover:text-sihati-slate">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
             <div class="flex items-center justify-end gap-3 border-t border-sihati-hairline pt-4">
                 <button type="button" onclick="closeModal('editUserModal')" class="rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>
@@ -183,61 +194,85 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-4 pt-5">
+        <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-4 pt-5" novalidate>
             @csrf
             <div>
-                <label class="block text-sm font-medium text-gray-700">Nama</label>
-                <input type="text" name="name" value="{{ old('name') }}" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-name" class="block text-sm font-medium text-gray-700">Nama</label>
+                <input type="text" id="tm-name" name="name" value="{{ old('name') }}" required
+                    class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('name') border-red-500 @else border-gray-300 @enderror">
+                @error('name')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text" name="username" value="{{ old('username') }}" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="tm-username" name="username" value="{{ old('username') }}" pattern="[a-zA-Z0-9_-]+" title="Hanya boleh huruf, angka, tanda hubung, dan underscore" required
+                    class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('username') border-red-500 @else border-gray-300 @enderror">
+                @error('username')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" value="{{ old('email') }}" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="tm-email" name="email" value="{{ old('email') }}" required
+                    class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('email') border-red-500 @else border-gray-300 @enderror">
+                @error('email')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Nomor HP</label>
-                <input type="text" name="no_hp" value="{{ old('no_hp') }}"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-no_hp" class="block text-sm font-medium text-gray-700">Nomor HP</label>
+                <input type="text" id="tm-no_hp" name="no_hp" value="{{ old('no_hp') }}" pattern="[0-9+\-\s]+" title="Hanya boleh angka, +, -, dan spasi"
+                    class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('no_hp') border-red-500 @else border-gray-300 @enderror">
+                @error('no_hp')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Bidang</label>
-                <select name="bidang_id"
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-bidang_id" class="block text-sm font-medium text-gray-700">Bidang</label>
+                <select id="tm-bidang_id" name="bidang_id"
+                    class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('bidang_id') border-red-500 @else border-gray-300 @enderror">
                     <option value="">-- Pilih Bidang --</option>
                     @foreach ($bidangs as $b)
                     <option value="{{ $b->id }}" {{ old('bidang_id') == $b->id ? 'selected' : '' }}>{{ $b->nama_bidang }}</option>
                     @endforeach
                 </select>
+                @error('bidang_id')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Role</label>
-                <select name="role" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-role" class="block text-sm font-medium text-gray-700">Role</label>
+                <select id="tm-role" name="role" required
+                    class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('role') border-red-500 @else border-gray-300 @enderror">
                     <option value="">-- Pilih Role --</option>
                     <option value="pegawai" {{ old('role') === 'pegawai' ? 'selected' : '' }}>Pegawai</option>
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                 </select>
+                @error('role')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" name="password" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
-                <p class="mt-1 text-xs text-gray-500">Minimal 8 karakter, mengandung huruf besar/kecil dan angka.</p>
+                <label for="tm-password" class="block text-sm font-medium text-gray-700">Password</label>
+                <div class="relative">
+                    <input type="password" id="tm-password" name="password" minlength="8" required
+                        class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm pr-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('password') border-red-500 @else border-gray-300 @enderror"
+                        oninput="tmValidatePassword(this)">
+                    <button type="button" onclick="togglePassword('tm-password', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sihati-stone hover:text-sihati-slate">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                        </svg>
+                    </button>
+                </div>
+                <p id="tm-passwordHelp" class="mt-1 text-xs text-gray-500">Minimal 8 karakter, mengandung huruf besar/kecil dan angka.</p>
+                @error('password')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
-                <input type="password" name="password_confirmation" required
-                    class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <label for="tm-password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+                <div class="relative">
+                    <input type="password" id="tm-password_confirmation" name="password_confirmation" minlength="8" required
+                        class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm pr-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 @error('password') border-red-500 @else border-gray-300 @enderror"
+                        oninput="tmValidatePasswordMatch(this)">
+                    <button type="button" onclick="togglePassword('tm-password_confirmation', this)" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sihati-stone hover:text-sihati-slate">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                        </svg>
+                    </button>
+                </div>
+                @error('password')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div class="flex items-center gap-2">
-                <input type="checkbox" name="is_active" value="1" checked class="rounded border-gray-300">
-                <label class="text-sm text-gray-700">Akun aktif</label>
+                <input type="checkbox" id="tm-is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="rounded border-gray-300">
+                <label for="tm-is_active" class="text-sm text-gray-700">Akun aktif</label>
             </div>
             <div class="flex justify-end gap-3 border-t border-gray-200 pt-4">
                 <button type="button" onclick="closeModal('tambahUserModal')" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Batal</button>
@@ -248,6 +283,7 @@
 </div>
 
 @include('partials.delete-confirm-modal')
+@include('partials.toggle-confirm-modal')
 
 @push('scripts')
 <script>
@@ -265,6 +301,48 @@ function tambahUser() {
     m.classList.remove('hidden'); m.classList.add('flex'); document.body.style.overflow = 'hidden';
     void c.offsetWidth; c.classList.add('animate-slide-up');
 }
+
+function tmValidatePassword(input) {
+    var help = document.getElementById('tm-passwordHelp');
+    var val = input.value;
+    var errors = [];
+    if (val.length < 8) errors.push('minimal 8 karakter');
+    if (!/[A-Z]/.test(val)) errors.push('huruf besar');
+    if (!/[a-z]/.test(val)) errors.push('huruf kecil');
+    if (!/[0-9]/.test(val)) errors.push('angka');
+    if (errors.length > 0) {
+        input.setCustomValidity('Password harus mengandung ' + errors.join(', ') + '.');
+        help.className = 'mt-1 text-xs text-red-500';
+    } else {
+        input.setCustomValidity('');
+        help.className = 'mt-1 text-xs text-green-600';
+    }
+    if (document.getElementById('tm-password_confirmation').value) {
+        tmValidatePasswordMatch(document.getElementById('tm-password_confirmation'));
+    }
+}
+
+function tmValidatePasswordMatch(input) {
+    var pw = document.getElementById('tm-password').value;
+    if (input.value !== pw) {
+        input.setCustomValidity('Konfirmasi password tidak cocok.');
+    } else {
+        input.setCustomValidity('');
+    }
+}
+
+document.querySelector('#tambahUserModal form').addEventListener('submit', function(e) {
+    if (!this.checkValidity()) {
+        e.preventDefault();
+        this.reportValidity();
+    }
+});
+
+@if (old('name') || old('username') || old('email'))
+document.addEventListener('DOMContentLoaded', function() {
+    tambahUser();
+});
+@endif
 
 function showUserDetail(btn) {
     var u = JSON.parse(btn.getAttribute('data-user'));
@@ -300,12 +378,23 @@ function editUser(btn) {
     document.getElementById('edit-bidang_id').value = u.bidang_id || '';
     document.getElementById('edit-role').value = u.role;
     document.getElementById('edit-password').value = '';
-    document.getElementById('edit-is_active').checked = u.is_active;
     var m = document.getElementById('editUserModal');
     var c = m.querySelector('div:first-child');
     c.classList.remove('animate-slide-up');
     m.classList.remove('hidden'); m.classList.add('flex'); document.body.style.overflow = 'hidden';
     void c.offsetWidth; c.classList.add('animate-slide-up');
+}
+
+function togglePassword(id, btn) {
+    var input = document.getElementById(id);
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
+    } else {
+        input.type = 'password';
+        btn.innerHTML = '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>';
+    }
 }
 </script>
 @endpush

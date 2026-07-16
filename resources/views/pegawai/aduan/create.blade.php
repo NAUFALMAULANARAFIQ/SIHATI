@@ -42,12 +42,10 @@
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                    <label for="priority_id" class="block text-sm font-medium text-sihati-charcoal">Prioritas <span class="text-sihati-error">*</span></label>
-                    <select id="priority_id" name="priority_id" class="mt-1.5 h-11 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 text-sm text-sihati-ink focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20 @error('priority_id') border-sihati-error @enderror">
-                        <option value="">Pilih prioritas</option>
-                        @foreach ($priorities as $pr)<option value="{{ $pr->id }}" {{ old('priority_id') == $pr->id ? 'selected' : '' }}>{{ $pr->nama_prioritas }}</option>@endforeach
-                    </select>
-                    @error('priority_id')<p class="mt-1 text-xs text-sihati-error">{{ $message }}</p>@enderror
+                    <label class="block text-sm font-medium text-sihati-charcoal">Prioritas</label>
+                    <div class="mt-1.5 flex h-11 w-full items-center rounded-md border border-sihati-hairline-strong bg-sihati-surface px-4 text-sm text-sihati-stone">
+                        Akan ditentukan oleh admin
+                    </div>
                 </div>
                 <div>
                     <label for="lokasi" class="block text-sm font-medium text-sihati-charcoal">Lokasi / Ruangan</label>
@@ -70,7 +68,7 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-sihati-charcoal">Lampiran (opsional)</label>
+                <span class="block text-sm font-medium text-sihati-charcoal">Lampiran (opsional)</span>
                 <label for="attachments" class="mt-1.5 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-sihati-hairline-strong bg-sihati-surface-soft p-6 transition hover:border-sihati-primary hover:bg-sihati-lavender/20">
                     <svg class="mb-2 h-8 w-8 text-sihati-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
                     <p class="text-sm font-medium text-sihati-charcoal">Upload lampiran</p>

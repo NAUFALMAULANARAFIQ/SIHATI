@@ -19,6 +19,7 @@ class StoreAduanRequest extends FormRequest
             'deskripsi' => ['required', 'string'],
             'lokasi' => ['nullable', 'string', 'max:150'],
             'no_kontak' => ['nullable', 'string', 'max:20'],
+            'priority_id' => ['nullable', 'exists:priorities,id'],
             'bidang_id' => ['nullable', 'exists:bidangs,id'],
             'attachments' => ['nullable', 'array', 'max:5'],
             'attachments.*' => ['file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],

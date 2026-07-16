@@ -46,6 +46,16 @@ class LoginRequest extends FormRequest
 
             $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
+            $user = \App\Models\User::where($field, $login)->first();
+
+            if ($user && !$user->is_active) {
+                RateLimiter::hit($this->throttleKey());
+
+                throw ValidationException::withMessages([
+                    'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi admin.',
+                ]);
+            }
+
             if (! Auth::attempt([
                 $field => $login,
                 'password' => $this->input('password'),
@@ -54,7 +64,7 @@ class LoginRequest extends FormRequest
                 RateLimiter::hit($this->throttleKey());
 
                 throw ValidationException::withMessages([
-                    'email' => trans('auth.failed'),
+                    'email' => 'Email/Username atau password salah.',
                 ]);
             }
 
@@ -76,11 +86,8 @@ class LoginRequest extends FormRequest
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
-        throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+                throw ValidationException::withMessages([
+            'email' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam ' . ceil($seconds / 60) . ' menit.',
         ]);
     }
 

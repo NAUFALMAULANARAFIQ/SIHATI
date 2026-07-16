@@ -69,7 +69,7 @@ class User extends Authenticatable
         return $this->hasMany(Rating::class);
     }
 
-    public function AppNotifications()
+    public function AppNotifications(): HasMany
     {
         return $this->hasMany(Notification::class);
     }

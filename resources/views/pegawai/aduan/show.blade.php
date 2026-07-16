@@ -4,7 +4,7 @@
 @endphp
 
 <x-app-layout :title="$aduan->nomor_tiket . ' - SIHATI BPPKAD'">
-<nav class="mb-4 text-sm text-sihati-steel">
+<nav class="mb-4 pt-5 font-semibold text-sm text-sihati-steel">
     <a href="{{ route('pegawai.aduan.index') }}" class="hover:text-sihati-link">Aduan</a>
     <span class="mx-2">/</span>
     <span class="text-sihati-charcoal">{{ $aduan->nomor_tiket }}</span>
@@ -18,11 +18,11 @@
                 @php
                     $s = $aduan->status?->nama_status ?? $aduan->status?->kode_status ?? 'diterima'; $sKey = strtolower($s);
                     $sC = match($sKey) { 'diterima' => 'bg-sihati-lavender text-sihati-primary-deep', 'diproses' => 'bg-sihati-sky text-sihati-link-pressed', 'selesai' => 'bg-sihati-mint text-sihati-success', default => 'bg-sihati-gray text-sihati-slate' };
-                    $p = $aduan->priority?->nama_prioritas ?? 'Rendah';
+                    $p = $aduan->priority?->nama_prioritas ?? '-';
                     $pC = match(strtolower($p)) { 'rendah' => 'bg-sihati-gray text-sihati-slate', 'sedang' => 'bg-sihati-sky text-sihati-link-pressed', 'tinggi' => 'bg-sihati-yellow-bold text-sihati-charcoal', 'mendesak' => 'bg-sihati-rose text-sihati-error', default => 'bg-sihati-gray text-sihati-slate' };
                 @endphp
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
-                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
+                <span id="statusBadge" data-key="{{ $sKey }}" class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $sC }}">{{ $s }}</span>
+                <span id="priorityBadge" class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $pC }}">{{ $p }}</span>
             </div>
             <h2 class="mt-3 text-lg font-semibold text-sihati-charcoal md:text-xl">{{ $aduan->judul }}</h2>
             <p class="mt-1 text-sm text-sihati-steel">Dibuat {{ \Carbon\Carbon::parse($aduan->tanggal_aduan ?? $aduan->created_at)->isoFormat('DD MMMM YYYY, HH:mm') }}</p>
@@ -66,7 +66,7 @@
                     $fileUrl = asset('storage/' . $att->file_path);
                     $isImage = $att->file_type
                         ? str_starts_with($att->file_type, 'image/')
-                        : (bool) preg_match('/\.(jpg|jpeg|png|webp)$/i', $att->file_name);
+                        : (bool) preg_match('/\.(jpg|jpeg|png)$/i', $att->file_name);
                     $isPdf = $att->file_type === 'application/pdf' || preg_match('/\.pdf$/i', $att->file_name);
                     $canPreview = $isImage || $isPdf;
                 @endphp
@@ -93,14 +93,14 @@
             @include('pegawai.aduan.partials.notes', ['notes' => $aduan->notes ?? []])
         </div>
 
-        <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
-            <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Riwayat Status</h3>
+        <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Riwayat Status</h3>
+        <div id="statusHistoryContainer" data-status-fetch-url="{{ route('pegawai.aduan.status.show', $aduan) }}" data-last-count="{{ count($aduan->histories ?? []) }}">
             @include('pegawai.aduan.partials.timeline', ['histories' => $aduan->histories ?? []])
         </div>
 
         <div class="rounded-lg border border-sihati-hairline bg-sihati-canvas p-5 shadow-subtle">
             <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-sihati-steel">Komentar &amp; Diskusi</h3>
-            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('pegawai.aduan.comments.store', $aduan)])
+            @include('pegawai.aduan.partials.comment-box', ['comments' => $aduan->comments ?? [], 'aduan' => $aduan, 'action' => route('pegawai.aduan.comments.store', $aduan), 'fetchUrl' => route('pegawai.aduan.comments.index', $aduan)])
         </div>
     </div>
 
@@ -157,7 +157,7 @@
         <form method="POST" action="{{ route('pegawai.aduan.ratings.store', $aduan) }}" class="mt-5 space-y-4">
             @csrf
             <div>
-                <label class="block text-sm font-medium text-sihati-charcoal">Rating</label>
+                <span class="block text-sm font-medium text-sihati-charcoal">Rating</span>
                 <div class="mt-2 flex items-center gap-1" id="starRating">
                     @for ($i = 1; $i <= 5; $i++)
                     <button type="button" data-value="{{ $i }}" class="star-btn h-8 w-8 text-sihati-hairline-strong transition-colors duration-150">
@@ -170,8 +170,8 @@
                 </div>
             </div>
             <div>
-                <label for="komentar" class="block text-sm font-medium text-sihati-charcoal">Komentar (opsional)</label>
-                <textarea id="komentar" name="komentar" rows="3" placeholder="Tulis kesan Anda terhadap penanganan aduan..." class="mt-1.5 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20"></textarea>
+                <label for="rating-komentar" class="block text-sm font-medium text-sihati-charcoal">Komentar (opsional)</label>
+                <textarea id="rating-komentar" name="komentar" rows="3" placeholder="Tulis kesan Anda terhadap penanganan aduan..." class="mt-1.5 w-full rounded-md border border-sihati-hairline-strong bg-sihati-canvas px-4 py-3 text-sm text-sihati-ink placeholder:text-sihati-stone focus:border-sihati-primary focus:outline-none focus:ring-2 focus:ring-sihati-primary/20"></textarea>
             </div>
             <div class="flex justify-end gap-3">
                 <button type="button" onclick="closeModal('ratingModal')" class="rounded-md border border-sihati-hairline-strong px-4 py-2 text-sm font-medium text-sihati-ink hover:bg-sihati-surface">Batal</button>
@@ -258,4 +258,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
+@include('pegawai.aduan.partials.status-live')
 </x-app-layout>

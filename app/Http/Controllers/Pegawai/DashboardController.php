@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->whereHas('status', fn($q) => $q->where('kode_status', 'selesai'))
             ->count();
 
-        $aduanTerbaru = Aduan::where('pelapor_id', $user->id)
+        $aduanTerbaru = Aduan::where('bidang_id', $user->bidang_id)
             ->whereDate('tanggal_aduan', now()->toDateString())
             ->with(['category', 'priority', 'status'])
             ->latest('tanggal_aduan')
