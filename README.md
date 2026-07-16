@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/images/Logo.png" alt="SIHATI Logo" width="420">
+  <img src="public/images/public/LogoWhite.svg" alt="SIHATI Logo" width="420">
 </p>
 
 <h3 align="center">Sistem Informasi Helpdesk Aduan Terintegrasi Internal</h3>
