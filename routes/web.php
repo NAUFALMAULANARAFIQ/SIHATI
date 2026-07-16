@@ -46,6 +46,7 @@ Route::middleware('auth')->get('/dashboard', function () {
 Route::middleware(['auth', 'role:pegawai'])->prefix('pegawai')->name('pegawai.')->group(function () {
     Route::get('/dashboard', [PegawaiDashboardController::class, 'index'])->name('dashboard');
     Route::resource('aduan', PegawaiAduanController::class)->only(['index', 'store', 'show']);
+    Route::get('/aduan/list', [PegawaiAduanController::class, 'list'])->name('aduan.list');
     Route::get('/aduan/{aduan}/status', [PegawaiAduanController::class, 'status'])->name('aduan.status.show');
     Route::post('/aduan/{aduan}/comments', [PegawaiCommentController::class, 'store'])->name('aduan.comments.store');
     Route::get('/aduan/{aduan}/comments', [PegawaiCommentController::class, 'index'])->name('aduan.comments.index');
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('aduan', AdminAduanController::class)->only(['index', 'create', 'store', 'show']);
+    Route::get('/aduan/list', [AdminAduanController::class, 'list'])->name('aduan.list');
     Route::get('/aduan/{aduan}/status', [AdminAduanController::class, 'status'])->name('aduan.status.show');
     Route::patch('/aduan/{aduan}/status', [AduanStatusController::class, 'update'])->name('aduan.status.update');
     Route::post('/aduan/{aduan}/notes', [AduanNoteController::class, 'store'])->name('aduan.notes.store');

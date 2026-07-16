@@ -44,9 +44,10 @@
             statusBadge.dataset.key = key;
         }
         if (priorityBadge) {
+            const pName = priority.nama || '-';
             const pKey = (priority.nama || '').toLowerCase();
             priorityBadge.className = `${badgeBaseClass} ${priorityColors[pKey] || 'bg-sihati-gray text-sihati-slate'}`;
-            priorityBadge.textContent = priority.nama;
+            priorityBadge.textContent = pName;
         }
     }
     function renderHistoryItem(history) {
