@@ -1,58 +1,190 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/images/Logo.png" alt="SIHATI Logo" width="420">
 </p>
 
-## About Laravel
+<h3 align="center">Sistem Informasi Helpdesk Aduan Terintegrasi Internal</h3>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  Platform helpdesk digital untuk pengelolaan aduan internal<br>
+  <strong>Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD)</strong>
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.3%2B-777BB4?style=flat&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Status-Active%20Development-success?style=flat" alt="Status">
+  <img src="https://img.shields.io/badge/License-Internal%20Use-blue?style=flat" alt="License">
+</p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p align="center">
+  <a href="#tentang-sihati">Tentang</a> •
+  <a href="#fitur-utama">Fitur</a> •
+  <a href="#teknologi">Teknologi</a> •
+  <a href="#instalasi">Instalasi</a> •
+  <a href="#struktur-proyek">Struktur</a> •
+  <a href="#kontribusi">Kontribusi</a>
+</p>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tentang SIHATI
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**SIHATI** (Sistem Informasi Helpdesk Aduan Terintegrasi Internal) adalah aplikasi web internal yang dikembangkan untuk **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD)** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Sebelumnya, pelaporan kendala internal (fasilitas, sistem, administrasi, dan layanan pendukung lainnya) dilakukan secara manual dan tersebar di berbagai kanal komunikasi, sehingga sulit dipantau dan tidak terdokumentasi dengan baik. SIHATI hadir sebagai satu pintu terpusat: pegawai dapat mengajukan aduan dengan mudah, sementara admin dapat mengelola, menindaklanjuti, dan melacak status setiap aduan secara transparan dan akuntabel.
 
-## Agentic Development
+## Fitur Utama
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Untuk Pegawai
+- Mengajukan aduan baru lengkap dengan kategori, bidang tujuan, lokasi, kontak, dan lampiran pendukung
+- Memantau status aduan secara real-time melalui riwayat status (timeline)
+- Berdiskusi langsung dengan admin/petugas melalui fitur komentar
+- Menerima notifikasi otomatis saat status aduan berubah atau ada balasan baru
+- Memberikan rating dan ulasan atas aduan yang telah selesai ditangani
 
-```bash
-composer require laravel/boost --dev
+### Untuk Admin
+- Dashboard terpusat untuk memantau seluruh aduan yang masuk
+- Mengelola status dan prioritas aduan (Diterima → Diproses → Selesai)
+- Menambahkan catatan internal yang tidak terlihat oleh pelapor
+- Mengelola lampiran dan berdiskusi dengan pelapor
+- Menghasilkan laporan rekap aduan, mencetak (PDF), dan mengekspor data ke Excel
+- Mengelola data master: pengguna, bidang/unit kerja, kategori, prioritas, dan status
+- Melacak seluruh aktivitas penting melalui log audit
 
-php artisan boost:install
+### Pengalaman Pengguna
+- **Notifikasi in-app** dengan indikator belum dibaca
+- **Live update tanpa reload** — komentar baru, perubahan status, dan badge prioritas pada halaman detail aduan diperbarui otomatis secara berkala
+
+## Peran Pengguna
+
+| Peran | Hak Akses |
+|:--|:--|
+| **Pegawai** | Mengajukan aduan, memantau status, berdiskusi, dan memberi rating atas aduan miliknya sendiri |
+| **Admin** | Mengelola seluruh aduan yang masuk, data master sistem, laporan, dan log aktivitas |
+
+Akses tiap halaman dikendalikan melalui middleware berbasis peran (`role:admin` / `role:pegawai`).
+
+## Alur Kerja Aduan
+
+```mermaid
+flowchart LR
+    A[Pegawai membuat aduan] --> B[Status: Diterima]
+    B --> C[Admin meninjau & menugaskan petugas]
+    C --> D[Status: Diproses]
+    D --> E{Diskusi via komentar}
+    E --> D
+    D --> F[Admin menyelesaikan aduan]
+    F --> G[Status: Selesai]
+    G --> H[Pegawai memberi rating]
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Setiap perubahan status tercatat sebagai riwayat (audit trail) yang dapat ditelusuri kapan pun melalui halaman detail aduan.
 
-## Contributing
+## Teknologi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Kategori | Teknologi |
+|:--|:--|
+| Backend Framework | [Laravel 13](https://laravel.com) (PHP 8.3+) |
+| Autentikasi | Laravel Breeze |
+| Frontend | Blade Templating, [Tailwind CSS 4](https://tailwindcss.com), Alpine.js |
+| Build Tool | Vite |
+| Database | SQLite *(default)* — kompatibel dengan MySQL/PostgreSQL |
+| Ekspor Dokumen | `barryvdh/laravel-dompdf` (PDF), `maatwebsite/excel` (Excel) |
+| Pembaruan Real-time | Polling berbasis Fetch API (vanilla JavaScript) |
 
-## Code of Conduct
+## Struktur Data
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Entitas inti dalam basis data SIHATI:
 
-## Security Vulnerabilities
+```mermaid
+erDiagram
+    USERS ||--o{ ADUANS : "mengajukan"
+    USERS ||--o{ ADUANS : "menangani (petugas)"
+    BIDANGS ||--o{ USERS : "menaungi"
+    BIDANGS ||--o{ ADUANS : "tujuan"
+    CATEGORIES ||--o{ ADUANS : "kategori"
+    PRIORITIES ||--o{ ADUANS : "prioritas"
+    STATUSES ||--o{ ADUANS : "status"
+    ADUANS ||--o{ ADUAN_STATUS_HISTORIES : "riwayat"
+    ADUANS ||--o{ ADUAN_COMMENTS : "komentar"
+    ADUANS ||--o{ ADUAN_NOTES : "catatan internal"
+    ADUANS ||--o{ ADUAN_ATTACHMENTS : "lampiran"
+    ADUANS ||--o{ RATINGS : "rating"
+    USERS ||--o{ NOTIFICATIONS : "menerima"
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Instalasi
 
-## License
+### Prasyarat
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- PHP >= 8.3
+- Composer
+- Node.js & npm
+
+### Langkah-langkah
+
+```bash
+# 1. Clone repository
+git clone https://github.com/NAUFALMAULANARAFIQ/SIHATI.git
+cd SIHATI
+
+# 2. Instal dependensi PHP
+composer install
+
+# 3. Instal dependensi frontend
+npm install
+
+# 4. Siapkan file environment
+cp .env.example .env
+php artisan key:generate
+
+# 5. Siapkan basis data (default: SQLite)
+touch database/database.sqlite
+php artisan migrate --seed
+
+# 6. Jalankan aplikasi (server + build asset sekaligus)
+composer run dev
+```
+
+Aplikasi dapat diakses melalui `http://localhost:8000`.
+
+> **Catatan:** Untuk menggunakan MySQL/PostgreSQL, sesuaikan variabel `DB_*` pada file `.env` sebelum menjalankan perintah migrasi.
+
+## Struktur Proyek
+
+```
+app/
+├── Http/Controllers/
+│   ├── Admin/            # Controller khusus peran admin
+│   └── Pegawai/          # Controller khusus peran pegawai
+├── Models/                # Aduan, User, Status, Priority, Notification, dll.
+└── services/              # Logika bisnis (AduanService, AduanStatusService, NotificationService, dll.)
+
+resources/views/
+├── admin/                  # Tampilan untuk admin
+├── pegawai/                # Tampilan untuk pegawai
+└── partials/                # Komponen tampilan bersama
+
+routes/
+└── web.php                 # Seluruh definisi routing aplikasi
+```
+
+## Kontribusi
+
+Proyek ini dikembangkan dan dikelola untuk kebutuhan internal BPPKAD. Kontribusi dari anggota tim pengembang dapat dilakukan dengan alur berikut:
+
+1. Buat *branch* baru dari `main`/`naufal` dengan nama deskriptif (mis. `fix/notifikasi-komentar`)
+2. Lakukan perubahan dan pastikan tidak merusak fitur yang sudah berjalan
+3. Ajukan *pull request* dengan deskripsi perubahan yang jelas
+4. Tunggu peninjauan sebelum digabungkan ke branch utama
+
+## Lisensi
+
+Perangkat lunak ini dikembangkan khusus untuk keperluan internal **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD)** dan tidak didistribusikan sebagai perangkat lunak sumber terbuka (*open source*). Seluruh hak penggunaan tunduk pada kebijakan internal instansi terkait.
+
+---
+
+<p align="center">
+  Dibangun dengan Laravel untuk mendukung pelayanan internal yang lebih responsif dan transparan.
+</p>
