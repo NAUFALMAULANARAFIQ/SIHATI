@@ -2,7 +2,7 @@
   <img src="public/images/LogoWhite.svg" alt="SIHATI Logo" width="420">
 </p>
 
-<h3 align="center">Sistem Informasi Helpdesk Aduan Terintegrasi Internal</h3>
+<h3 align="center">Sistem Informasi Helpdesk Aduan Teknologi Informasi</h3>
 
 <p align="center">
   Platform helpdesk digital untuk pengelolaan aduan internal<br>
@@ -38,7 +38,7 @@
 
 ## Tentang SIHATI
 
-**SIHATI** (Sistem Informasi Helpdesk Aduan Terintegrasi Internal) adalah aplikasi web internal yang dikembangkan untuk **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
+**SIHATI** (Sistem Informasi Helpdesk Aduan Teknologi Informasi) adalah aplikasi web internal yang dikembangkan untuk **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
 
 Sebelumnya, pelaporan kendala internal (fasilitas, sistem, administrasi, dan layanan pendukung lainnya) dilakukan secara manual dan tersebar di berbagai kanal komunikasi, sehingga sulit dipantau dan tidak terdokumentasi dengan baik. SIHATI hadir sebagai satu pintu terpusat: pegawai dapat mengajukan aduan dengan mudah, sementara admin dapat mengelola, menindaklanjuti, dan melacak status setiap aduan secara transparan dan akuntabel.
 
