@@ -6,7 +6,7 @@
 
 <p align="center">
   Platform helpdesk digital untuk pengelolaan aduan internal<br>
-  <strong>Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK</strong>
+  <strong>Badan Pendapatan, Pengelolaan Keuangan dan Aset Daerah (BPPKAD) GRESIK</strong>
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@
 
 ## Tentang SIHATI
 
-**SIHATI** (Sistem Informasi Helpdesk Aduan Teknologi Informasi) adalah aplikasi web internal yang dikembangkan untuk **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
+**SIHATI** (Sistem Informasi Helpdesk Aduan Teknologi Informasi) adalah aplikasi web internal yang dikembangkan untuk **Badan Pendapatan, Pengelolaan Keuangan dan Aset Daerah (BPPKAD) GRESIK** guna menyederhanakan proses pelaporan, penanganan, dan pemantauan aduan/keluhan pegawai secara terpusat.
 
 Sebelumnya, pelaporan kendala internal (fasilitas, sistem, administrasi, dan layanan pendukung lainnya) dilakukan secara manual dan tersebar di berbagai kanal komunikasi, sehingga sulit dipantau dan tidak terdokumentasi dengan baik. SIHATI hadir sebagai satu pintu terpusat: pegawai dapat mengajukan aduan dengan mudah, sementara admin dapat mengelola, menindaklanjuti, dan melacak status setiap aduan secara transparan dan akuntabel.
 
@@ -189,7 +189,7 @@ Proyek ini dikembangkan dan dikelola untuk kebutuhan internal BPPKAD GRESIK. Kon
 
 ## Lisensi
 
-Perangkat lunak ini dikembangkan khusus untuk keperluan internal **Badan Pengelolaan Pendapatan, Keuangan dan Aset Daerah (BPPKAD) GRESIK** dan tidak didistribusikan sebagai perangkat lunak sumber terbuka (*open source*). Seluruh hak penggunaan tunduk pada kebijakan internal instansi terkait.
+Perangkat lunak ini dikembangkan khusus untuk keperluan internal **Badan Pendapatan, Pengelolaan Keuangan dan Aset Daerah (BPPKAD) GRESIK** dan tidak didistribusikan sebagai perangkat lunak sumber terbuka (*open source*). Seluruh hak penggunaan tunduk pada kebijakan internal instansi terkait.
 
 ---
 
